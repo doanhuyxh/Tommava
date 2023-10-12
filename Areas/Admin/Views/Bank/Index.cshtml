@@ -1,0 +1,144 @@
+﻿<div id="AppVueBank" class="row">
+    <div class="col-12 row">
+        <div class="col-3"><div v-on:click="AddBank()" class="btn btn-success">Thêm ngân hàng</div></div>
+    </div>
+    <div class="container mt-lg-2">
+        <table class="table table-striped" id="tableBrand">
+            <thead class="text-dark">
+                <tr>
+                    <th class="text-center">STT</th>
+                    <th class="text-center">Tên ngân hàng</th>
+                    <th class="text-center">Chủ Tài khoản</th>
+                    <th class="text-center">Số tài khoản</th>
+                    <th class="text-center">Hoạt động</th>
+                    <th class="text-center"></th>
+                </tr>
+            </thead>
+            <tr v-for="(item, index) in data">
+                <td class="text-center">{{index+1}}</td>
+                <th class="text-center">{{item.bankName}}</th>
+                <th class="text-center">{{item.bankOwner}}</th>
+                <th class="text-center">{{item.bankOwner}}</th>
+                <th class="text-center">
+                    <span v-if="item.isActive" class="btn btn-success" v-on:click="ChangeActive(item.id)">Mở</span>
+                    <span v-else class="btn btn-danger" v-on:click="ChangeActive(item.id)">Đóng</span>
+                </th>
+                <td class="text-center">
+                    <span class="btn btn-warning" v-on:click="EditBank(item.id)">Cập nhật</span>
+                    <span class="btn btn-danger" v-on:click="DeleteBank(item.id)">Xóa</span>
+                </td>
+            </tr>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var AppVueBank = new Vue({
+        el: "#AppVueBank",
+        data: {
+            data: []
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.initData();
+        },
+        methods: {
+            initData() {
+                fetch("/Admin/Bank/GetData")
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data.object)
+                        this.data = data.object;
+                    })
+            },
+            AddBank() {
+                $("#SmallModelContent").load(`/Admin/Bank/AddData`, function () {
+                    $("#staticSmallModel").modal("show");
+                    $("#staticSmallModellTitle").html("Thêm ngân hàng")
+                })
+            },
+            EditBank(id) {
+                $("#SmallModelContent").load(`/Admin/Bank/EditData?id=${id}`, function () {
+                    $("#staticSmallModel").modal("show");
+                    $("#staticSmallModellTitle").html("Cập nhật ngân hàng")
+                })
+            },
+            DeleteBank(id) {
+                let custhis = this;
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa ?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Xóa',
+                    showCancelButton: true,
+                    cancelButtonText: "Hủy",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/Admin/Bank/DeleteBank?id=${id}`, {
+                            method: "DELETE"
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.statusCode) {
+                                    Swal.fire({
+                                        position: 'center',
+                                        icon: 'success',
+                                        title: "Thành công",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then((res) => { custhis.initData() });
+                                }
+                            })
+                    }
+                })
+            },
+            ChangeActive(id) {
+                fetch(`/Admin/Bank/ChangeActive?id=${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data.object)
+                        this.initData()
+                    })
+            }
+        }
+    })
+
+
+    function Save() {
+
+        var _data = new FormData()
+        _data.append("Id", $("#Id").val())
+        _data.append("CreatedDate", $("#CreatedDate").val())
+        _data.append("IsDeleted", $("#IsDeleted").val())
+        _data.append("IsActive", $("#IsActive").val())
+        _data.append("BankName", $("#BankName").val())
+        _data.append("BankNumber", $("#BankNumber").val())
+        _data.append("BankOwner", $("#BankOwner").val())
+
+        fetch("/Admin/Bank/AddData", {
+            method: "POST",
+            headers: {
+                processData: false,
+                contentBank: false,
+            },
+            body: _data
+        })
+            .then(res => res.json())
+            .then(res => {
+                $('#staticSmallModel').modal('hide');
+                console.log(res)
+                Swal.fire({
+                    title: "Thành công",
+                    icon: 'info',
+                }).then(res => {
+                    AppVueBank.initData();
+                });
+            })
+    }
+</script>

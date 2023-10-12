@@ -1,0 +1,181 @@
+﻿<div id="AppVueUserManagement">
+    <div class="row">
+        <div class="col-12 row">
+        </div>
+        <div class="container mt-lg-2">
+            <table class="table table-striped" id="tableBrand">
+                <thead class="text-dark">
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Họ Tên</th>
+                        <th class="text-center">Tài khoản</th>
+                        <th class="text-center">Ngày mua vip</th>
+                        <th class="text-center">Gói vip</th>
+                        <th class="text-center">Xem chi tiết</th>
+                        <th class="text-center">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tr v-for="(item, index) in data">
+                    <td class="text-center">{{index+1}}</td>
+                    <th class="text-center">{{item.fullName}}</th>
+                    <th class="text-center">{{item.userName}}</th>
+                    <th class="text-center">{{item.dateVipCreate != null ? item.dateVipCreate.split("T")[0] :""}}</th>
+                    <th class="text-center">{{item.vipName == null ? "chưa mua" : item.vipName}}</th>
+                    <th class="text-center"><span class="btn btn-info" v-on:click="ViewUser(index)"><i class="fa-solid fa-eye" style="color: #1f512e;"></i></span></th>
+                    <td class="text-center">
+                        <span v-if="item.isActive" class="btn btn-success" v-on:click="ChangeActive(item.userName)">Hoạt động</span>
+                        <span v-else class="btn btn-danger" v-on:click="ChangeActive(item.userName)">Dừng hoạt động</span>
+                    </td>
+                </tr>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="ModelUserDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin người dùng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <tr>
+                            <td>Họ tên</td>
+                            <td>{{data[currenUser].fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>avatar</td>
+                            <td><img :src="data[currenUser].avatarPath" style="height: 80px; width:auto" /></td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>{{data[currenUser].email}}</td>
+                        </tr>
+                        <tr>
+                            <td>Tài khoản</td>
+                            <td>{{data[currenUser].userName}}</td>
+                        </tr>
+                        <tr>
+                            <td>giới thiệu cá nhân</td>
+                            <td>{{data[currenUser].about}}</td>
+                        </tr>
+                        <tr>
+                            <td>Loại vip</td>
+                            <td class="flex-column">
+                                <p>{{data[currenUser].vipName}}</p>
+                                <div class="form-group">
+                                    <label class="form-label">Chọn Vip với</label>
+                                    <select class="form-control" id="vipValue">
+                                        <option disabled selected>Vui lòng chọn</option>
+                                        <option v-for="(item, index) in dataVip" :value="item.id">{{item.name}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày đăng ký</td>
+                            <td>{{data[currenUser].createDate.split("T")[0]}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" v-on:click="SaveUser()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var AppVueUserManagement = new Vue({
+        el: "#AppVueUserManagement",
+        data: {
+            data: [],
+            dataVip: [],
+            currenUser: 0,
+            showModal: false,
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.initData();
+        },
+        methods: {
+            initData() {
+                fetch("/Admin/UserManagement/GetData")
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data.object)
+                        this.data = data.object;
+                    })
+                fetch("/Admin/VipPackage/GetData")
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data.object)
+                        this.dataVip = data.object;
+                    })
+            },
+            ChangeActive(useName) {
+                fetch(`/Admin/UserManagement/ChangeActive?useName=${useName}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        this.initData()
+                    })
+            },
+            ViewUser(index) {
+                this.currenUser = index;
+                $("#ModelUserDetail").modal("show");
+            },
+            SaveUser() {
+                $("#ModelUserDetail").modal("hide");
+                let vipvalue = document.getElementById("vipValue").value;
+
+                fetch(`/Admin/UserManagement/UpdateVip?vipId=${vipvalue}&useName=${this.data[this.currenUser].userName}`)
+                    .then(res => {
+                        this.initData();
+                    })
+
+            }
+        },
+
+    })
+
+
+    function Save() {
+
+        var _data = new FormData()
+        _data.append("Id", $("#Id").val())
+        _data.append("CreatedDate", $("#CreatedDate").val())
+        _data.append("Name", $("#Name").val())
+
+        fetch("/Admin/UserManagement/AddData", {
+            method: "POST",
+            headers: {
+                processData: false,
+                contentUserManagement: false,
+            },
+            body: _data
+        })
+            .then(res => res.json())
+            .then(res => {
+                $('#staticSmallModel').modal('hide');
+                console.log(res)
+                Swal.fire({
+                    title: "Thành công",
+                    icon: 'info',
+                }).then(res => {
+                    AppVueUserManagement.initData();
+                });
+            })
+    }
+</script>

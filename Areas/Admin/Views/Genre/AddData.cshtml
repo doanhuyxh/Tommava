@@ -1,0 +1,15 @@
+﻿@model Tommava.Models.GenreVM.GenreVM;
+@{
+    Layout = null;
+}
+<form>
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="CreatedDate" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    
+</form>

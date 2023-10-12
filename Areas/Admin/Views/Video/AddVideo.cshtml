@@ -1,0 +1,54 @@
+﻿@model Tommava.Models.videoVM.VideoVM;
+@{
+    Layout = null;
+}
+<form>
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="CreatedDate" />
+    <input hidden asp-for="Img" />
+    <input hidden asp-for="VideoLink" />
+    <input hidden asp-for="IsActive" />
+    <input hidden asp-for="IsHome" />
+
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryId" class="form-label"></label>
+        <div class="container">
+            <select asp-for="CategoryId" asp-items="@ViewBag.Cate" class="form-control">
+                <option value="0" selected disabled>--- Không  ---</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="GenreId" class="form-label"></label>
+        <div class="container">
+            <select asp-for="GenreId" asp-items="@ViewBag.Genre" class="form-control">
+                <option value="0" selected disabled>--- Không  ---</option>
+            </select>
+            <span asp-validation-for="GenreId" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="ImgFile" class="control-label"></label>
+        <input asp-for="ImgFile" class="form-control" />
+        <span asp-validation-for="ImgFile" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="VideoFile" class="control-label"></label>
+        <input asp-for="VideoFile" class="form-control" />
+        <span asp-validation-for="VideoFile" class="text-danger"></span>
+    </div>
+
+</form>

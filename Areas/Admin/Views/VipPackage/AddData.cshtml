@@ -1,0 +1,35 @@
+﻿@model Tommava.Models.VipPackageVM.VipPackageVM;
+@{
+    Layout = null;
+}
+<form>
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="CreatedDate" />
+    <input hidden asp-for="IsDeleted" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+     <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+     <div class="form-group">
+        <label asp-for="Description1" class="control-label"></label>
+        <input asp-for="Description1" class="form-control" />
+        <span asp-validation-for="Description1" class="text-danger"></span>
+    </div>
+     <div class="form-group">
+        <label asp-for="Description2" class="control-label"></label>
+        <input asp-for="Description2" class="form-control" />
+        <span asp-validation-for="Description2" class="text-danger"></span>
+    </div>
+     <div class="form-group">
+        <label asp-for="Description3" class="control-label"></label>
+        <input asp-for="Description3" class="form-control" />
+        <span asp-validation-for="Description3" class="text-danger"></span>
+    </div>
+</form>

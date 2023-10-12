@@ -1,0 +1,27 @@
+﻿@model Tommava.Models.BankVM.BankVM;
+@{
+    Layout = null;
+}
+<form>
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="CreatedDate" />
+    <input hidden asp-for="IsDeleted" />
+    <input hidden asp-for="IsActive" />
+
+    <div class="form-group">
+        <label asp-for="BankName" class="control-label"></label>
+        <input asp-for="BankName" class="form-control" />
+        <span asp-validation-for="BankName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BankNumber" class="control-label"></label>
+        <input asp-for="BankNumber" class="form-control" />
+        <span asp-validation-for="BankNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BankOwner" class="control-label"></label>
+        <input asp-for="BankOwner" class="form-control" />
+        <span asp-validation-for="BankOwner" class="text-danger"></span>
+    </div>
+    
+</form>
