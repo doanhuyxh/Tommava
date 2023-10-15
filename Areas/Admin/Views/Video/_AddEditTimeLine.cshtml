@@ -1,0 +1,25 @@
+﻿@model Tommava.Models.TimeLineVideoVM.TimeLineVideoVM;
+
+<form>
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="CreatedDate" />
+    <input hidden asp-for="IsDeleted" />
+
+    <div class="form-group">
+        <label asp-for="TimePoint" class="control-label"></label>
+        <input asp-for="TimePoint" class="form-control" />
+        <span asp-validation-for="TimePoint" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Vietnamese" class="control-label"></label>
+        <textarea asp-for="Vietnamese" class="form-control"></textarea>
+        <span asp-validation-for="Vietnamese" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="English" class="control-label"></label>
+        <textarea asp-for="English" class="form-control"></textarea>
+        <span asp-validation-for="English" class="text-danger"></span>
+    </div>
+ 
+</form>
+

@@ -1,43 +1,86 @@
-﻿<div id="AppVueVideo" class="row">
-    <div class="col-12 row">
-        <div class="col-3"><div v-on:click="AddVideo()" class="btn btn-success">Thêm video</div></div>
-    </div>
-    <div class="container mt-lg-2">
-        <table class="table table-striped" id="tableBrand">
-            <thead class="text-dark">
-                <tr>
-                    <th class="text-center">STT</th>
-                    <th class="text-center">Tên Video</th>
-                    <th class="text-center">Ảnh đại diện</th>
-                    <th class="text-center">Video</th>
-                    <th class="text-center">Thể loại</th>
-                    <th class="text-center">Danh mục</th>
-                    <th class="text-center"></th>
-                </tr>
-            </thead>
-            <tr v-for="(item, index) in data">
-                <td class="text-center">{{index+1}}</td>
-                <th class="text-center">{{item.name}}</th>
-                <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewImg(item.img)"><i class="fa-solid fa-image" style="color: #1f5129;"></i></span></th>
-                <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewVideo(item.videoLink)"><i class="fa-solid fa-photo-film" style="color: #1f5129;"></i></span></th>
-                <th class="text-center">{{item.genreName}}</th>
-                <th class="text-center">{{item.categoryName}}</th>
-                <td class="text-center">
-                    <span class="btn btn-warning" v-on:click="EditVideo(item.id)">Cập nhật</span>
-                    <span class="btn btn-danger" v-on:click="DeleteVideo(item.id)">Xóa</span>
-                </td>
-            </tr>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
+﻿
 
+<div id="AppVueVideo">
+    <div class="row">
+        <div class="col-12 row">
+            <div class="col-3"><div v-on:click="AddVideo()" class="btn btn-success">Thêm video</div></div>
+        </div>
+        <div class="container mt-lg-2">
+            <table class="table table-striped" id="tableBrand">
+                <thead class="text-dark">
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Tên Video</th>
+                        <th class="text-center">Ảnh đại diện</th>
+                        <th class="text-center">Video</th>
+                        <th class="text-center">TimeLine</th>
+                        <th class="text-center">Thể loại</th>
+                        <th class="text-center">Danh mục</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tr v-for="(item, index) in data">
+                    <td class="text-center">{{index+1}}</td>
+                    <th class="text-center">{{item.name}}</th>
+                    <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewImg(item.img)"><i class="fa-solid fa-image" style="color: #1f5129;"></i></span></th>
+                    <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewVideo(item.videoLink)"><i class="fa-solid fa-photo-film" style="color: #1f5129;"></i></span></th>
+                    <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewTimeLine(item.id)"><i class="fa-solid fa-timeline" style="color: #e62828;"></i></span></th>
+                    <th class="text-center">{{item.genreName}}</th>
+                    <th class="text-center">{{item.categoryName}}</th>
+                    <td class="text-center">
+                        <span class="btn btn-warning" v-on:click="EditVideo(item.id)">Cập nhật</span>
+                        <span class="btn btn-danger" v-on:click="DeleteVideo(item.id)">Xóa</span>
+                    </td>
+                </tr>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalTimeLine" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">TimeLine video</h5>
+                    <button type="button" class="btn btn-success" v-on:click="AddTimeLine">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="ModalTimeLineContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalAddTimeLine" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalAddTimeLineTitle">TimeLine</h5>
+                </div>
+                <div class="modal-body" id="ModalAddTimeLineContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" v-on:click="SaveTimeLine()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
 <script>
+
     var AppVueVideo = new Vue({
         el: "#AppVueVideo",
         data: {
-            data: []
+            data: [],
+            currentVideoId: 0
         },
         computed: {
 
@@ -107,18 +150,62 @@
                 console.log(src)
                 Swal.fire({
                     html: `<video controls style=" width: 100%;height: auto;">
-                                              <source src="${src}" type="video/mp4">
-                                    </video>`,
+                                                  <source src="${src}" type="video/mp4">
+                                        </video>`,
                     imageWidth: 1000,
                 })
             },
+            ViewTimeLine(videoId) {
+                this.currentVideoId = videoId;
+                $("#ModalTimeLineContent").load(`/Admin/Video/TimeLine?videoid=${videoId}`, function () {
+
+                    $("#ModalTimeLineTitle").html("Time line video");
+                    $("#ModalTimeLine").modal("show");
+                })
+            },
+            AddTimeLine() {
+                $("#ModalAddTimeLineContent").load(`/Admin/Video/AddTimeLine`, function () {
+                    $("#ModalAddTimeLineTitle").html("Thêm mới");
+                    $("#ModalAddTimeLine").modal("show");
+                })
+            },
+            SaveTimeLine() {
+                let _timeline = new FormData();
+                _timeline.append("Id", $("#Id").val())
+                _timeline.append("CreatedDate", $("#CreatedDate").val())
+                _timeline.append("TimePoint", $("#TimePoint").val())
+                _timeline.append("Vietnamese", $("#Vietnamese").val())
+                _timeline.append("English", $("#English").val())
+                _timeline.append("VideoId", this.currentVideoId)
+                _timeline.append("IsDeleted", false)
+
+                fetch("/Admin/Video/SaveTimeLine", {
+                    method: "POST",
+                    headers: {
+                        processData: false,
+                        contentType: false,
+                    },
+                    body: _timeline
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        $('#ModalAddTimeLine').modal('hide');
+                        console.log(res)
+                        Swal.fire({
+                            title: "Thành công",
+                            icon: 'info',
+                        }).then(res => {
+                            this.ViewTimeLine(this.currentVideoId);
+                        });
+                    })
+            }
         }
     })
 
 
     function Save() {
 
-        var _data = new FormData()
+        let _data = new FormData()
         _data.append("Id", $("#Id").val())
         _data.append("CreatedDate", $("#CreatedDate").val())
         _data.append("Img", $("#Img").val())
@@ -152,4 +239,43 @@
                 });
             })
     }
+
+    function DeleteTimeLine(videoid) {
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xóa',
+            showCancelButton: true,
+            cancelButtonText: "Hủy",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/Admin/Video/DeleteTimeLine?id=${videoid}`, {
+                    method: "DELETE"
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.statusCode) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: "Thành công",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((res) => { AppVueVideo.ViewTimeLine(videoid) });
+                        }
+                    })
+            }
+        })
+    }
+
+    function EditTimeLine(videoid) {
+        $("#ModalAddTimeLineContent").load(`/Admin/Video/EditTimeLine?id=${videoid}`, function () {
+            $("#ModalAddTimeLineTitle").html("Cập nhật");
+            $("#ModalAddTimeLine").modal("show");
+        })
+    }
+
 </script>

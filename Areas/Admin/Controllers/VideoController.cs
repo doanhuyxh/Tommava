@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Tommava.Models;
 using Microsoft.EntityFrameworkCore;
 using Tommava.Services;
+using Tommava.Models.TimeLineVideoVM;
 
 namespace Tommava.Areas.Admin.Controllers
 {
@@ -24,27 +25,28 @@ namespace Tommava.Areas.Admin.Controllers
         {
             return View();
         }
-        
+
         public async Task<IActionResult> GetData()
         {
             JsonResultVM json = new JsonResultVM();
-            var rs = await (from i in _context.Video where i.IsDeleted == false
-                      select new VideoVM
-                      {
-                          Id = i.Id,
-                          Name = i.Name,
-                          Description= i.Description,
-                          Img = i.Img,
-                          VideoLink = i.VideoLink,
-                          CategoryId = i.CategoryId,
-                          CategoryName = _context.Category.FirstOrDefault(c=>c.Id == i.CategoryId)!.Name??"",
-                          GenreId = i.GenreId,
-                          GenreName = _context.Genre.FirstOrDefault(c => c.Id == i.GenreId)!.Name ?? "",
-                          IsDeleted = i.IsDeleted,
-                          IsActive = i.IsActive,
-                          IsHome = i.IsHome,
-                          CreatedDate = i.CreatedDate,
-                      }).ToListAsync();
+            var rs = await (from i in _context.Video
+                            where i.IsDeleted == false
+                            select new VideoVM
+                            {
+                                Id = i.Id,
+                                Name = i.Name,
+                                Description = i.Description,
+                                Img = i.Img,
+                                VideoLink = i.VideoLink,
+                                CategoryId = i.CategoryId,
+                                CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
+                                GenreId = i.GenreId,
+                                GenreName = _context.Genre.FirstOrDefault(c => c.Id == i.GenreId)!.Name ?? "",
+                                IsDeleted = i.IsDeleted,
+                                IsActive = i.IsActive,
+                                IsHome = i.IsHome,
+                                CreatedDate = i.CreatedDate,
+                            }).ToListAsync();
             json.Message = "Success";
             json.StatusCode = 200;
             json.Object = rs;
@@ -53,14 +55,14 @@ namespace Tommava.Areas.Admin.Controllers
 
         public IActionResult AddVideo()
         {
-            VideoVM video= new VideoVM();
+            VideoVM video = new VideoVM();
             List<ItemDropDown> itemCate = (from _l in _context.Category
                                            where _l.IsDeleted == false
                                            select new ItemDropDown { Id = _l.Id, Name = _l.Name }).ToList();
             ViewBag.Cate = new SelectList(itemCate, "Id", "Name");
 
             List<ItemDropDown> itemGenre = (from _l in _context.Genre
-                                       where _l.IsDeleted == false
+                                            where _l.IsDeleted == false
                                             select new ItemDropDown { Id = _l.Id, Name = _l.Name }).ToList();
             ViewBag.Genre = new SelectList(itemGenre, "Id", "Name");
 
@@ -68,7 +70,7 @@ namespace Tommava.Areas.Admin.Controllers
         }
         public IActionResult EditVideo(int id)
         {
-            VideoVM video= _context.Video.FirstOrDefault(i=>i.Id==id);
+            VideoVM video = _context.Video.FirstOrDefault(i => i.Id == id);
 
             List<ItemDropDown> itemCate = (from _l in _context.Category
                                            where _l.IsDeleted == false
@@ -76,7 +78,7 @@ namespace Tommava.Areas.Admin.Controllers
             ViewBag.Cate = new SelectList(itemCate, "Id", "Name");
 
             List<ItemDropDown> itemGenre = (from _l in _context.Genre
-                                       where _l.IsDeleted == false
+                                            where _l.IsDeleted == false
                                             select new ItemDropDown { Id = _l.Id, Name = _l.Name }).ToList();
             ViewBag.Genre = new SelectList(itemGenre, "Id", "Name");
 
@@ -96,7 +98,7 @@ namespace Tommava.Areas.Admin.Controllers
                     {
                         if (vm.ImgFile != null)
                         {
-                             vm.Img = await _icommon.UploadImgVideoAsync(vm.ImgFile);
+                            vm.Img = await _icommon.UploadImgVideoAsync(vm.ImgFile);
                         }
                         if (vm.VideoFile != null)
                         {
@@ -151,5 +153,114 @@ namespace Tommava.Areas.Admin.Controllers
                 return Ok(json);
             }
         }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteVideo(int id)
+        {
+            JsonResultVM json = new JsonResultVM();
+            Models.Video video = await _context.Video.FirstOrDefaultAsync(i => i.Id == id);
+            if (video == null)
+            {
+                json.StatusCode = 404;
+                json.Message = "Not Found";
+                json.Object = null;
+                return Ok(json);
+            }
+            else
+            {
+                _context.Video.Remove(video);
+                await _context.SaveChangesAsync();
+                json.StatusCode = 202;
+                json.Message = "Success";
+                json.Object = null;
+                return Ok(json);
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> TimeLine(int videoid)
+        {
+            List<TimeLineVideo> timeLineVideos = await _context.TimeLineVideo.Where(i => i.VideoId == videoid).OrderBy(i=>i.TimePoint).ToListAsync();
+            return PartialView("_TimeLine", timeLineVideos);
+
+        }
+
+        [HttpGet]
+        public IActionResult AddTimeLine()
+        {
+            TimeLineVideoVM vm = new TimeLineVideoVM();
+            return PartialView("_AddEditTimeLine");
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditTimeLine(int id)
+        {
+            TimeLineVideoVM vm = await _context.TimeLineVideo.FirstOrDefaultAsync(i => i.Id == id);
+            return PartialView("_AddEditTimeLine", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTimeLine(TimeLineVideoVM vm)
+        {
+            JsonResultVM json = new JsonResultVM();
+            try
+            {
+                TimeLineVideo timeLine = new TimeLineVideo();
+                if (vm.Id == 0)
+                {
+                    timeLine = vm;
+                    timeLine.CreatedDate = DateTime.Now;
+                    timeLine.IsDeleted = false;
+                    _context.Add(timeLine);
+                    await _context.SaveChangesAsync();
+
+                    json.Object = timeLine;
+                    json.Message = "";
+                    json.StatusCode = 201;
+                    return Json(json);
+                }
+                else
+                {
+                    timeLine = await _context.TimeLineVideo.FirstOrDefaultAsync(i => i.Id == vm.Id);
+                    vm.CreatedDate = timeLine.CreatedDate;
+                    _context.Entry(timeLine).CurrentValues.SetValues(vm);
+                    await _context.SaveChangesAsync();
+
+
+                    json.Object = timeLine;
+                    json.Message = "";
+                    json.StatusCode = 202;
+                    return Json(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                json.Message = ex.Message;
+                json.Object = vm;
+                json.StatusCode = 500;
+                return Ok(json);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTimeLine(int id)
+        {
+            JsonResultVM json = new JsonResultVM();
+            Models.TimeLineVideo timeLineVideo = await _context.TimeLineVideo.FirstOrDefaultAsync(i => i.Id == id);
+            if (timeLineVideo == null)
+            {
+                json.StatusCode = 404;
+                json.Message = "Not Found";
+                json.Object = null;
+                return Ok(json);
+            }
+            else
+            {
+                _context.TimeLineVideo.Remove(timeLineVideo);
+                await _context.SaveChangesAsync();
+                json.StatusCode = 202;
+                json.Message = "Success";
+                json.Object = null;
+                return Ok(json);
+            }
+        }
     }
 }
+

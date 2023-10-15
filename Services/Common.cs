@@ -44,9 +44,9 @@ namespace Tommava.Services
                 string uploadsFolder = Path.Combine(_iHostingEnvironment.ContentRootPath, "wwwroot/upload/Video");
 
                 if (file.FileName == null)
-                    path = "video.mp4";
+                    path = "";
                 else
-                    path = DateTime.Now.Ticks.ToString() + ".mp4";
+                    path = DateTime.Now.Ticks.ToString() + Path.GetExtension(file.FileName);
                 string filePath = Path.Combine(uploadsFolder, path);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
