@@ -1,5 +1,7 @@
 ﻿@model List<TimeLineVideo>
-
+@{
+    int i = 0;
+}
 @if (Model != null && Model.Count > 0)
 {
     <table class="table table-hover">
@@ -15,8 +17,9 @@
         <tbody>
             @foreach (var item in Model)
             {
+                i++;
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">@i</th>
                     <td class="text-center">@item.TimePoint</td>
                     <td class="text-center">@item.Vietnamese</td>
                     <td class="text-center">@item.English</td>

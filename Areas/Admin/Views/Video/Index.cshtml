@@ -180,8 +180,10 @@
                 })
             },
             ViewTimeLine(videoId) {
+                if (videoId != undefined) {
                 this.currentVideoId = videoId;
-                $("#ModalTimeLineContent").load(`/Admin/Video/TimeLine?videoid=${videoId}`, function () {
+                }
+                $("#ModalTimeLineContent").load(`/Admin/Video/TimeLine?videoid=${this.currentVideoId}`, function () {
 
                     $("#ModalTimeLineTitle").html("Time line video");
                     $("#ModalTimeLine").modal("show");
@@ -249,7 +251,7 @@
                 })
                     .then(res => res.json())
                     .then(res => {
-                        console.log(res)
+                        $("#ModalAddTimeLineExcel").modal("hide");
                     })
             },
             DonwloadExcel() {
@@ -327,7 +329,10 @@
                                 title: "Thành công",
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then((res) => { AppVueVideo.ViewTimeLine(videoid) });
+                            }).then((res) => { 
+                                
+                                AppVueVideo.ViewTimeLine()
+                            });
                         }
                     })
             }
