@@ -1,0 +1,67 @@
+﻿<div id="TimeLineExcel">
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Nhập excel</label>
+        <input class="form-control" type="file" id="FileExcel" v-on:change="HandleExcel">
+    </div>
+    <p class="text text-center">Danh sách Time line</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Thời gian</th>
+                <th scope="col">Sub tiếng việt</th>
+                <th scope="col">Sub tiếng anh</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(item, index) in data" key="index">
+                <th scope="row">{{index+1}}</th>
+                <td>{{item.Time}}</td>
+                <td>{{item.SubVN}}</td>
+                <td>{{item.SubEN}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+<script>
+    var TimeLineExcel = new Vue({
+        el: "#TimeLineExcel",
+        data: {
+            data: [],
+            title: "ádadkhaslkdajsdjasldkj",
+            currentVideoId: 0
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.currentVideoId = AppVueVideo.$data.currentVideoId
+        },
+        methods: {
+            HandleExcel() {
+                let input = document.getElementById("FileExcel");
+                const file = input.files[0];
+                const reader = new FileReader();
+                let currentThis = this;
+                reader.onload = (event) => {
+                    let data = event.target.result;
+                    let workbook = XLSX.read(data, { type: 'binary' });
+                    let sheetName = workbook.SheetNames[0];
+                    let worksheet = workbook.Sheets[sheetName];
+                    let jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    console.log("jsonData", jsonData);
+                    for (let i = 0; i < jsonData.length; i++) {
+                        currentThis.data.push(jsonData[i])
+                    }
+
+                }
+                reader.readAsBinaryString(file);
+            },
+            HandleCsv() {
+
+            }
+        }
+    })
+</script>

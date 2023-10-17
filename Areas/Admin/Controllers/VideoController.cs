@@ -178,7 +178,7 @@ namespace Tommava.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> TimeLine(int videoid)
         {
-            List<TimeLineVideo> timeLineVideos = await _context.TimeLineVideo.Where(i => i.VideoId == videoid).OrderBy(i=>i.TimePoint).ToListAsync();
+            List<TimeLineVideo> timeLineVideos = await _context.TimeLineVideo.Where(i => i.VideoId == videoid).OrderBy(i => i.TimePoint).ToListAsync();
             return PartialView("_TimeLine", timeLineVideos);
 
         }
@@ -259,6 +259,46 @@ namespace Tommava.Areas.Admin.Controllers
                 json.Message = "Success";
                 json.Object = null;
                 return Ok(json);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddTimeLineExcel()
+        {
+            return PartialView("_AddTimeLineExcel");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTimeLineRange(List<TimeLineVideoVM> vm)
+        {
+            JsonResultVM json = new JsonResultVM();
+            try
+            {
+                for(int i = 0; i < vm.Count; i++)
+                {
+                    TimeLineVideo t = new TimeLineVideo();
+                    t.VideoId = vm[i].VideoId;
+                    t.Vietnamese = vm[i].Vietnamese;
+                    t.English = vm[i].English;
+                    t.TimePoint = vm[i].TimePoint;
+                    t.CreatedDate = DateTime.Now;
+                    t.IsDeleted = false;
+
+                    await _context.AddAsync(t);
+                    await _context.SaveChangesAsync();
+                }
+
+                json.Message = "Success";
+                json.StatusCode = 201;
+                json.Object = null;
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+                json.StatusCode = 500;
+                json.Message = ex.Message;
+                json.Object = vm;
+                return BadRequest(json);
             }
         }
     }

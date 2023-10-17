@@ -43,9 +43,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">TimeLine video</h5>
-                    <button type="button" class="btn btn-success" v-on:click="AddTimeLine">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
+                    <div>
+                        <button type="button" class="btn btn-success" v-on:click="AddTimeLine">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" v-on:click="AddTimeLineExcel">
+                            <i class="fa-regular fa-file-excel" style="color: #0e620f;"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-body" id="ModalTimeLineContent">
                 </div>
@@ -67,6 +72,25 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     <button type="button" class="btn btn-primary" v-on:click="SaveTimeLine()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalAddTimeLineExcel" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalAddTimeLineTitleExcel">TimeLine</h5>
+                    <button type="button" class="btn btn-success" v-on:click="DonwloadExcel">
+                        <i class="fa-solid fa-download" style="color: #18af2a;"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="ModalAddTimeLineContentExcel">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" v-on:click="SaveTimeLineExcel()">Lưu</button>
                 </div>
             </div>
         </div>
@@ -150,8 +174,8 @@
                 console.log(src)
                 Swal.fire({
                     html: `<video controls style=" width: 100%;height: auto;">
-                                                  <source src="${src}" type="video/mp4">
-                                        </video>`,
+                                                              <source src="${src}" type="video/mp4">
+                                                    </video>`,
                     imageWidth: 1000,
                 })
             },
@@ -167,6 +191,12 @@
                 $("#ModalAddTimeLineContent").load(`/Admin/Video/AddTimeLine`, function () {
                     $("#ModalAddTimeLineTitle").html("Thêm mới");
                     $("#ModalAddTimeLine").modal("show");
+                })
+            },
+            AddTimeLineExcel() {
+                $("#ModalAddTimeLineContentExcel").load(`/Admin/Video/AddTimeLineExcel`, function () {
+                    $("#ModalAddTimeLineTitleExcel").html("Thêm mới");
+                    $("#ModalAddTimeLineExcel").modal("show");
                 })
             },
             SaveTimeLine() {
@@ -198,6 +228,39 @@
                             this.ViewTimeLine(this.currentVideoId);
                         });
                     })
+            },
+            SaveTimeLineExcel() {
+                let _data = new FormData();
+                for (let i = 0; i < TimeLineExcel.$data.data.length; i++) {
+                    _data.append(`vm[${i}][Id]`, 0)
+                    _data.append(`vm[${i}][TimePoint]`, TimeLineExcel.$data.data[i].Time)
+                    _data.append(`vm[${i}][Vietnamese]`, TimeLineExcel.$data.data[i].SubVN)
+                    _data.append(`vm[${i}][English]`, TimeLineExcel.$data.data[i].SubEN)
+                    _data.append(`vm[${i}][VideoId]`, this.currentVideoId)
+                }
+
+                fetch("/Admin/Video/SaveTimeLineRange", {
+                    method: "POST",
+                    headers: {
+                        processData: false,
+                        contentType: false,
+                    },
+                    body: _data
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log(res)
+                    })
+            },
+            DonwloadExcel() {
+                const fileUrl = '/upload/excel/Book1.xlsx';
+                const link = $('<a>', {
+                    href: fileUrl,
+                    download: 'Example.xlsx'
+                }).appendTo('body');
+                link[0].click();
+                link.remove();
+
             }
         }
     })
