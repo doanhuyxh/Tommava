@@ -1,13 +1,9 @@
-﻿@model Tommava.Models.CombinedViewModel.CombinedViewModel
-<nav id="menu-home" class="menu-home">
+﻿<nav id="menu-home" class="menu-home d-none">
     <a href="/"><button class="c-menu__close"><i class="fa fa-home" aria-hidden="true"></i></button></a>
     <ul class="c-menu-home">
-        @foreach (var category in Model.CategoryData)
-        {
             <a href="/Video-Hoc-Tieng-Anh/c=45" class="c-menu__link">
-            <li class="c-menu__item"><i class="fa fa-leanpub" aria-hidden="true"></i>@category.Name</li>
+            <li class="c-menu__item"><i class="fa fa-leanpub" aria-hidden="true"></i>category.Name</li>
             </a>
-        }
 
         <hr>
         <div>

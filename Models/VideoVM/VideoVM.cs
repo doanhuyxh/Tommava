@@ -30,6 +30,7 @@ namespace Tommava.Models.videoVM
         public List<VideoVM> listDataVideo { get; set; }
 
         public List<Category> listCate { get; set; }
+        public List<TimeLineVideoVM.TimeLineVideoVM> listTimeLine { get; set; }
 
 
         public int ViewCount { get; set; } = 0;
