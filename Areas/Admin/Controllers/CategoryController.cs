@@ -56,7 +56,7 @@ namespace Tommava.Areas.Admin.Controllers
                         Category.CreatedDate = DateTime.Now;
                         if(vm.IconFile != null)
                         {
-                            vm.Icon = await _icommon.UploadIconAsync(vm.IconFile);
+                            Category.Icon = await _icommon.UploadIconAsync(vm.IconFile);
                         }
                         _context.Add(Category);
                         await _context.SaveChangesAsync();

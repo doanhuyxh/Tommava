@@ -31,15 +31,45 @@
     var AppVueCategory = new Vue({
         el: "#AppVueCategory",
         data: {
-            data: []
+            data: [],
+            NameCategory: "",
+            SlugCategory:"",
         },
         computed: {
-
+            computedSlug() {
+                return this.generateSlug(this.NameCategory);
+            },
+        },
+        watch: {
+            computedSlug(newVal) {
+                this.SlugCategory = newVal;
+            },
         },
         mounted() {
             this.initData();
         },
         methods: {
+            generateSlug(text) {
+                if (text != null) {
+                    let str = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+                    const replacements = {
+                        "đ": "d",
+                        "Đ": "D"
+                    };
+
+                    str = str
+                        .replace(/đ/g, 'd')
+                        .replace(/Đ/g, 'D')
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '');
+
+
+                    return str;
+                }
+
+            },
             initData() {
                 fetch("/Admin/Category/GetData")
                     .then(res => res.json())
@@ -96,12 +126,13 @@
 
 
     function Save() {
-
+        console.log(form_category.$data.NameCategory);
         var _data = new FormData()
         _data.append("Id", $("#Id").val())
         _data.append("CreatedDate", $("#CreatedDate").val())
-        _data.append("Name", $("#Name").val())
+        _data.append("Name", form_category.$data.NameCategory)
         _data.append("Icon", $("#Icon").val())
+        _data.append("Slug", form_category.$data.SlugCategory)
         _data.append("IconFile", document.getElementById("IconFile").files[0])
 
         fetch("/Admin/Category/AddData", {

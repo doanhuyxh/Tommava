@@ -14,7 +14,7 @@ namespace Tommava.Models.CategoryVM
         public bool IsDeleted { get; set; }
         public string Slug { get; set; }
 
-        public List<VideoVM> listDataVideo { get; set; }
+        public List<VideoVM>? listDataVideo { get; set; }
 
         public static implicit operator CategoryVM(Category category)
         {
