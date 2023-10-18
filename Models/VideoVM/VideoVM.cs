@@ -79,7 +79,7 @@ namespace Tommava.Models.videoVM
                 SubCategoryId = vm.SubCategoryId,
                 NameVn = vm.NameVn,
                 Slug = vm.Slug,
-            };
+            }; 
         }
     }
 }
