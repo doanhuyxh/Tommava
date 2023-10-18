@@ -73,22 +73,23 @@ namespace Tommava.Controllers
                 CategoryData = groupedResults
             };
 
+
             return View(combinedViewModel);
         }
-        public async Task<IActionResult> GetNews()
-        {
-            var categories = _context.Category.ToList();
-            var combinedViewModel = new CombinedViewModel
-            {
-                CategoryData = categories.Select(category => new CategoryVM
-                {
-                   Name = category.Name,
-                   Id  = category.Id,
+        //public async Task<IActionResult> GetNews()
+        //{
+        //    var categories = _context.Category.ToList();
+        //    var combinedViewModel = new CombinedViewModel
+        //    {
+        //        CategoryData = categories.Select(category => new CategoryVM
+        //        {
+        //           Name = category.Name,
+        //           Id  = category.Id,
 
-                }).ToList(),
-            };
-            return PartialView("_nav", combinedViewModel.CategoryData);
-        }
+        //        }).ToList(),
+        //    };
+        //    return PartialView("_nav", combinedViewModel.CategoryData);
+        //}
 
 
         public IActionResult Privacy()

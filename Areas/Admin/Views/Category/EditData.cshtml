@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-<form>
+<form id="form_category">
     <input hidden asp-for="Id" />
     <input hidden asp-for="CreatedDate" />
     <input hidden asp-for="Icon" />
@@ -10,8 +10,13 @@
 
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
+        <input asp-for="Name" class="form-control" v-model="NameCategory" />
         <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Slug" class="control-label"></label>
+        <input asp-for="Slug" class="form-control" v-model="computedSlug" />
+        <span asp-validation-for="Slug" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -22,3 +27,46 @@
 
 
 </form>
+<script>
+    var form_category = new Vue({
+        el: "#form_category",
+        data: {
+            NameCategory: "@Html.Raw(Model.Name)",
+            SlugCategory: "@Html.Raw(Model.Slug)",
+        },
+        computed: {
+            computedSlug() {
+                return this.generateSlug(this.NameCategory);
+            },
+        },
+        watch: {
+            computedSlug(newVal) {
+                this.SlugCategory = newVal;
+            },
+        },
+        methods: {
+            generateSlug(text) {
+                if (text != null) {
+                    let str = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+                    const replacements = {
+                        "đ": "d",
+                        "Đ": "D"
+                    };
+
+                    str = str
+                        .replace(/đ/g, 'd')
+                        .replace(/Đ/g, 'D')
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '');
+
+
+                    return str;
+                }
+
+            },
+        }
+
+    });
+</script>
