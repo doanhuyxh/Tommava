@@ -132,6 +132,30 @@
     .sub-line {
         padding: 6px;
     }
+
+    .word{
+        position: relative;
+    }
+
+    .word:hover {
+        color: yellow;
+    }
+
+    #result {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px; 
+        border-bottom-right-radius: 10px; 
+        border-bottom-left-radius: 10px; 
+        background: #fff;
+        position: absolute;
+        width: 445px;
+        height: auto;
+        color: #000;
+        top: -222px;
+        text-align: left;
+        visibility: hidden;
+    }
+
 </style>
 <div class="container-fluid">
     <div class="row">
@@ -144,9 +168,26 @@
                 <span class="cue-wrapper" id="cue-wrapper" style="font-size: 150%;">
                     <span class="cue-line">
                         <span class="cue">
-                           
+                           <span class="word">This</span>
                         </span>
                     </span>
+                    <div id="result">
+                        <div class="">
+                            <div class="d-flex" style="border-bottom: 1px solid #ccc">
+                                <div>
+                                    <p id="word-main"></p>
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-volume-high" style="cursor: pointer" onclick="speakWord('word-main', 'male')"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            Nghĩa của từ:
+                            <ul id="meaning-list">
+                            </ul>
+                        </div>
+                    </div>
                     <span class="cue-line"></span>
                 </span>
             </div>
@@ -168,9 +209,26 @@
             </div>
         </div>
     </div>
+   
+
 </div>
 
 <script>
+    function speakWord(elementId, voiceName) {
+        const wordElement = document.getElementById(elementId);
+        const textToSpeak = wordElement.textContent;
+        const msg = new SpeechSynthesisUtterance(textToSpeak);
+
+        const voices = window.speechSynthesis.getVoices();
+
+        const maleVoice = voices.find(voice => voice.name === voiceName);
+
+        if (maleVoice) {
+            msg.voice = maleVoice;
+        }
+        window.speechSynthesis.speak(msg);
+    }
+
     const data = @Html.Raw(Json.Serialize(Model.VideoVMOj.listTimeLine));
     const video = document.getElementById("video");
     const subtitleContainer = document.querySelector("#cue-wrapper"); 
@@ -210,13 +268,13 @@
         subtitleContainer.innerHTML = ""; 
 
         data.forEach((item) => {
-            if (item.TimePoint === currentTime) {
+            if (item.timePoint === currentTime) {
                 const cueLine = document.createElement("span");
                 cueLine.classList.add("cue-line");
                 const cue = document.createElement("span");
                 cue.classList.add("cue");
 
-                item.English.split(" ").forEach((word) => {
+                item.english.split(" ").forEach((word) => {
                     const wordSpan = document.createElement("span");
                     wordSpan.classList.add("word");
                     wordSpan.textContent = word + " ";
@@ -227,11 +285,62 @@
 
                 const vietnameseCue = document.createElement("span");
                 vietnameseCue.classList.add("cue-line");
-                vietnameseCue.innerHTML = `<span class="cue">${item.Vietnamese}</span>`;
+                vietnameseCue.innerHTML = `<span class="cue">${item.vietnamese}</span>`;
 
                 subtitleContainer.appendChild(cueLine);
                 subtitleContainer.appendChild(vietnameseCue);
             }
+        });
+        const searchWords = document.querySelectorAll('.word');
+        const resultElement = document.querySelectorAll('#result');
+        let currentHoveredWord = '';
+        function searchWord(word) {
+            fetch('http://localhost:3000/tudien')
+                .then(response => response.json())
+                .then(data => {
+                    const searchResult = data.find(item => item.word.trim() === word.trim());
+
+                    const meaningList = document.getElementById('meaning-list');
+
+                    if (searchResult) {
+                        meaningList.innerHTML = ''; 
+                        const listItem = document.createElement('li');
+                        listItem.textContent = searchResult.note;
+                        meaningList.appendChild(listItem);
+                    } else {
+                        meaningList.innerHTML = ''; 
+                        const notFoundItem = document.createElement('li');
+                        notFoundItem.textContent = 'Không tìm thấy từ: ' + word;
+                        meaningList.appendChild(notFoundItem);
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu JSON:', error);
+                });
+        }
+
+
+        searchWords.forEach(wordElement => {
+            wordElement.addEventListener('mouseenter', () => {
+                const word = wordElement.textContent;
+                currentHoveredWord = word;
+                document.getElementById('word-main').textContent = word; 
+                searchWord(word);
+                resultElement.style.visibility = 'visible';
+            });
+
+            wordElement.addEventListener('mouseleave', () => {
+                if (wordElement.textContent === currentHoveredWord) {
+                    document.getElementById('meaning-list').innerHTML = ''; 
+                    resultElement.style.visibility = 'hidden';
+                }
+            });
+
+            wordElement.addEventListener('input', () => {
+                const word = wordElement.textContent;
+                searchWord(word);
+                resultElement.style.visibility = 'hidden';
+            });
         });
     };
 
@@ -243,5 +352,5 @@
             video.currentTime = timeToSeconds(time);
         });
     });
-
+  
 </script>
