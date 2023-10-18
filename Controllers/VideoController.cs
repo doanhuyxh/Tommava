@@ -20,14 +20,19 @@ namespace Tommava.Controllers
         }
 
         [Route("video/{slug}")]
-        public IActionResult Index(string slug, int id)
+        public async Task <IActionResult> Index(string slug, int id)
         {
             ViewBag.Slug = slug;
             var pr = (from _pr in _context.Video
                      where _pr.Id == id
                      select new VideoVM
                      {
+                         Id = id,
+                         CategoryId = _pr.CategoryId,
                          VideoLink = _pr.VideoLink,
+                         Name = _pr.Name,
+                         NameVn = _pr.NameVn,
+                         ViewCount = _pr.ViewCount,
                          listTimeLine = _context.TimeLineVideo
                                         .Where(img => img.VideoId == id)
                                         .Select(img => new TimeLineVideoVM
@@ -39,15 +44,39 @@ namespace Tommava.Controllers
                                         }).ToList()
 
                      }).FirstOrDefault();
-
-           
-
-            var combinedViewModel = new CombinedViewModel
+            if (pr != null)
             {
-                VideoVMOj = pr,
-            };
+                var prRs = _context.Video.Where(img => img.Id == pr.Id).FirstOrDefault();
+                prRs.ViewCount++;
+                await  _context.SaveChangesAsync();
+                var lastTime = (from _last in _context.Video
+                                where _last.CategoryId == pr.CategoryId
+                                select new VideoVM
+                                {
+                                    Id = _last.Id,
+                                    CategoryId = _last.CategoryId,
+                                    VideoLink = _last.VideoLink,
+                                    Slug = _last.Slug,
+                                    Name = _last.Name,
+                                    NameVn = _last.NameVn,
+                                    ViewCount = _last.ViewCount,
+                                    Img = _last.Img,
+                                }).ToList();
+                var combinedViewModel = new CombinedViewModel
+                {
+                    VideoVMOj = pr,
+                    VideoData = lastTime
+                };
 
-            return View(combinedViewModel);
+                return View(combinedViewModel);
+            }
+
+            else
+            {
+               
+                return NotFound();
+            }
+
         }
     }
 }

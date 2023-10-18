@@ -130,7 +130,8 @@
     }
 
     .sub-line {
-        padding: 6px;
+        padding: 14px  8px;
+        border-bottom: 1px solid #ccc;
     }
 
     .word{
@@ -151,7 +152,7 @@
         width: 445px;
         height: auto;
         color: #000;
-        top: -222px;
+        top: -160px;
         text-align: left;
         visibility: hidden;
     }
@@ -159,42 +160,63 @@
 </style>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-9" style="position: relative;">
-            <video controls class="position-relative" style="width: 100%; height: auto;" id="video">
+        <div class="col-12 col-md-12 col-xl-9" style="position: relative;">
+            <video controls  style="width: 100%; height: auto;" id="video">
                 <source src="@Model.VideoVMOj.VideoLink" type="video/mp4">
             </video>
-            <div class="cue-display wsshadow-1697613594557" style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);  color: white; text-align: center; padding: 10px;">
+            <div class="cue-display wsshadow-1697613594557" style="position: absolute; bottom: 200px; left: 50%; transform: translateX(-50%);  color: white; text-align: center; padding: 10px;">
                 <span class="description-cues" aria-live="assertive"></span>
                 <span class="cue-wrapper" id="cue-wrapper" style="font-size: 150%;">
                     <span class="cue-line">
                         <span class="cue">
-                           <span class="word">This</span>
                         </span>
                     </span>
-                    <div id="result">
-                        <div class="">
-                            <div class="d-flex" style="border-bottom: 1px solid #ccc">
-                                <div>
-                                    <p id="word-main"></p>
-                                </div>
-                                <div>
-                                    <i class="fa-solid fa-volume-high" style="cursor: pointer" onclick="speakWord('word-main', 'male')"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            Nghĩa của từ:
-                            <ul id="meaning-list">
-                            </ul>
-                        </div>
-                    </div>
+                    
                     <span class="cue-line"></span>
                 </span>
+                <div id="result">
+                    <div class="">
+                        <div class="d-flex" style="border-bottom: 1px solid #ccc">
+                            <div>
+                                <p id="word-main"></p>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-volume-high" style="cursor: pointer" onclick="speakWord('word-main', 'male')"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="loading">
+
+                        </div>
+                        Nghĩa của từ:
+                        <ul id="meaning-list">
+                        </ul>
+                    </div>
+                </div>
             </div>
 
+            <div class="mt-3 p-3 bg-white">
+                <div class="mb-4" style="border-bottom: 1px solid #ccc">
+                    <h5>@Model.VideoVMOj.Name</h5>
+                    <h5>@Model.VideoVMOj.NameVn</h5>
+                    <p>
+                        @Model.VideoVMOj.ViewCount lượt xem
+                    </p>
+                </div>
+                <div class="d-flex flex-row">
+                    <div>
+                        <img class="image-user-avatar" src="~/upload/avatar/blank_avatar.png" width="48" />
+                    </div>
+                    <div>
+                        Admin
+                        <p>Ngày đăng: @Model.VideoVMOj.CreatedDate</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-3">
+        <div class="col-12 col-md-12 col-xl-3">
             <div id="DataTable" class="scroll-sub">
                 @foreach (var item in Model.VideoVMOj.listTimeLine)
                 {
@@ -206,6 +228,40 @@
                         <span class="show-time-second">@item.TimePoint</span>
                     </div>
                 }
+            </div>
+
+            <div class="mt-3 search-video-total">
+                @foreach (var itemMain in Model.VideoData)
+                {
+                   
+                    <div class="d-flex flex-row mt-2" style="border-bottom: 1px solid #ccc">
+                        <div class="search-video-img single">
+                            <a href="/video/@itemMain.Slug?id=@itemMain.Id" class="video-for-list-related">
+                                <img src="@itemMain.Img" >
+                            </a>
+                        </div>
+                        <div class="">
+                            <a href="/video/@itemMain.Slug?id=@itemMain.Id">
+                                <h4 class="eng-title-2">
+                                    @itemMain.NameVn
+                                </h4>
+                                <h5 class="eng-title-2">
+                                    @itemMain.Name
+                                </h5>
+                            </a>
+                            <div class="search-view-time single">
+                                <span class="search-views single">
+                                    @itemMain.ViewCount
+                                    lượt xem
+                                </span> <span class="flag single">
+                                    <img src="~/upload/avatar/suben.png" style="width:20px;height:10px" data-toggle="tooltip" title="" data-original-title="Có phụ đề Anh">
+                                    <img src="~/upload/avatar/subvi.png" style="width:20px;height:10px" data-toggle="tooltip" title="" data-original-title="Có phụ đề Việt">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
             </div>
         </div>
     </div>
@@ -261,7 +317,7 @@
         }
         return 0;
     }
-
+   
     video.ontimeupdate = function () {
         const currentTime = formatTime(video.currentTime);
 
@@ -292,23 +348,27 @@
             }
         });
         const searchWords = document.querySelectorAll('.word');
-        const resultElement = document.querySelectorAll('#result');
+        const resultElement = document.getElementById('result');
         let currentHoveredWord = '';
+
         function searchWord(word) {
+            $('.loading').fadeIn();
             fetch('http://localhost:3000/tudien')
                 .then(response => response.json())
                 .then(data => {
+                    $('.loading').fadeOut();
+
                     const searchResult = data.find(item => item.word.trim() === word.trim());
 
                     const meaningList = document.getElementById('meaning-list');
 
                     if (searchResult) {
-                        meaningList.innerHTML = ''; 
+                        meaningList.innerHTML = '';
                         const listItem = document.createElement('li');
                         listItem.textContent = searchResult.note;
                         meaningList.appendChild(listItem);
                     } else {
-                        meaningList.innerHTML = ''; 
+                        meaningList.innerHTML = '';
                         const notFoundItem = document.createElement('li');
                         notFoundItem.textContent = 'Không tìm thấy từ: ' + word;
                         meaningList.appendChild(notFoundItem);
@@ -319,33 +379,57 @@
                 });
         }
 
-
         searchWords.forEach(wordElement => {
             wordElement.addEventListener('mouseenter', () => {
                 const word = wordElement.textContent;
                 currentHoveredWord = word;
-                document.getElementById('word-main').textContent = word; 
+                document.getElementById('word-main').textContent = word;
                 searchWord(word);
                 resultElement.style.visibility = 'visible';
             });
 
-            wordElement.addEventListener('mouseleave', () => {
-                if (wordElement.textContent === currentHoveredWord) {
-                    document.getElementById('meaning-list').innerHTML = ''; 
-                    resultElement.style.visibility = 'hidden';
-                }
-            });
-
-            wordElement.addEventListener('input', () => {
-                const word = wordElement.textContent;
-                searchWord(word);
-                resultElement.style.visibility = 'hidden';
-            });
+            // Add a mouseleave event listener to the resultElement
+          
         });
+        resultElement.addEventListener('mouseleave', () => {
+            resultElement.style.visibility = 'hidden';
+        });
+
     };
-
+    function convertTimeToSeconds(time) {
+        const parts = time.split(':');
+        return (
+            parseInt(parts[0]) * 3600 + // Hours
+            parseInt(parts[1]) * 60 +   // Minutes
+            parseInt(parts[2])          // Seconds
+        );
+    }
+    const subContainer = document.querySelector('.scroll-sub');
     const subLines = document.querySelectorAll(".sub-line");
+    video.addEventListener('timeupdate', () => {
+        const currentTime = video.currentTime;
 
+        subLines.forEach(subLine => {
+            const dataTime = subLine.getAttribute('data-time');
+            const dataTimeInSeconds = convertTimeToSeconds(dataTime);
+
+            if (Math.abs(dataTimeInSeconds - currentTime) < 0.5) {
+                subLine.style.backgroundColor = '#ccc';
+                subLine.style.opacity = '1.5';
+                subLine.style.fontWeight = '700';
+
+                // Scroll to the matched sub-line within the subtitle container
+                subContainer.scrollTo({
+                    top: subLine.offsetTop - subContainer.offsetTop,
+                    behavior: 'smooth'
+                });
+            } else {
+                subLine.style.backgroundColor = 'initial';
+                subLine.style.opacity = 'initial';
+                subLine.style.fontWeight = 'initial';
+            }
+        });
+    });
     subLines.forEach((subLine) => {
         subLine.addEventListener("click", () => {
             const time = subLine.dataset.time;
