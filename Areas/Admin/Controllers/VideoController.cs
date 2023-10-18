@@ -45,6 +45,10 @@ namespace Tommava.Areas.Admin.Controllers
                                 IsDeleted = i.IsDeleted,
                                 IsActive = i.IsActive,
                                 IsHome = i.IsHome,
+                                NameVn = i.NameVn,
+                                Slug = i.Slug,
+                                SubCategoryId = i.SubCategoryId,
+                                ViewCount = i.ViewCount,
                                 CreatedDate = i.CreatedDate,
                             }).ToListAsync();
             json.Message = "Success";

@@ -27,14 +27,14 @@ namespace Tommava.Models.videoVM
         [Display(Name = "Ảnh đại diện")]
         public IFormFile? ImgFile { get; set; }
 
-        public List<VideoVM> listDataVideo { get; set; }
+        public List<VideoVM>? listDataVideo { get; set; }
 
-        public List<Category> listCate { get; set; }
+        public List<Category>? listCate { get; set; }
 
 
-        public int ViewCount { get; set; } = 0;
+        public int? ViewCount { get; set; } = 0;
         [Display(Name = "Danh mục phụ")]
-        public int SubCategoryId { get; set; } = 0;
+        public int? SubCategoryId { get; set; } = 0;
         [Display(Name ="Tên tiếng việt")]
         public string NameVn { get; set; }
         [Display(Name = "Slug")]

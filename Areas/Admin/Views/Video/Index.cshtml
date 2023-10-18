@@ -5,29 +5,33 @@
         <div class="col-12 row">
             <div class="col-3"><div v-on:click="AddVideo()" class="btn btn-success">Thêm video</div></div>
         </div>
-        <div class="container mt-lg-2">
-            <table class="table table-striped" id="tableBrand">
+        <div class="container">
+            <table class="table table-striped" id="tableVideo">
                 <thead class="text-dark">
                     <tr>
                         <th class="text-center">STT</th>
-                        <th class="text-center">Tên Video</th>
-                        <th class="text-center">Ảnh đại diện</th>
-                        <th class="text-center">Video</th>
-                        <th class="text-center">TimeLine</th>
-                        <th class="text-center">Thể loại</th>
-                        <th class="text-center">Danh mục</th>
-                        <th class="text-center"></th>
+                        <th class="text-center text-nowrap">Tên tiếng anh</th>
+                        <th class="text-center text-nowrap">Tên tiếng việt</th>
+                        <th class="text-center text-nowrap">Slug</th>
+                        <th class="text-center text-nowrap">Ảnh đại diện</th>
+                        <th class="text-center text-nowrap">Video</th>
+                        <th class="text-center text-nowrap">TimeLine</th>
+                        <th class="text-center text-nowrap">Thể loại</th>
+                        <th class="text-center text-nowrap">Danh mục</th>
+                        <th class="text-center text-nowrap"></th>
                     </tr>
                 </thead>
                 <tr v-for="(item, index) in data">
                     <td class="text-center">{{index+1}}</td>
-                    <th class="text-center">{{item.name}}</th>
+                    <th class="text-center text-wrap">{{item.name}}</th>
+                    <th class="text-center text-wrap">{{item.nameVn}}</th>
+                    <th class="text-center text-wrap">{{item.slug}}</th>
                     <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewImg(item.img)"><i class="fa-solid fa-image" style="color: #1f5129;"></i></span></th>
                     <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewVideo(item.videoLink)"><i class="fa-solid fa-photo-film" style="color: #1f5129;"></i></span></th>
                     <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewTimeLine(item.id)"><i class="fa-solid fa-timeline" style="color: #e62828;"></i></span></th>
-                    <th class="text-center">{{item.genreName}}</th>
-                    <th class="text-center">{{item.categoryName}}</th>
-                    <td class="text-center">
+                    <th class="text-center text-wrap">{{item.genreName}}</th>
+                    <th class="text-center text-wrap">{{item.categoryName}}</th>
+                    <td class="text-center text-nowrap">
                         <span class="btn btn-warning" v-on:click="EditVideo(item.id)">Cập nhật</span>
                         <span class="btn btn-danger" v-on:click="DeleteVideo(item.id)">Xóa</span>
                     </td>
@@ -271,6 +275,7 @@
     function Save() {
         let _data = new FormData()
         _data.append("Id", $("#Id").val())
+        _data.append("ViewCount", $("#ViewCount").val())
         _data.append("CreatedDate", $("#CreatedDate").val())
         _data.append("Img", $("#Img").val())
         _data.append("VideoLink", $("#VideoLink").val())
@@ -280,6 +285,7 @@
         _data.append("Description", $("#Description").val())
         _data.append("CategoryId", $("#CategoryId").val())
         _data.append("NameVn", $("#NameVn").val())
+        _data.append("Slug", $("#Slug").val())
         _data.append("GenreId", $("#GenreId").val())
         _data.append("ImgFile", document.getElementById("ImgFile").files[0])
         _data.append("VideoFile", document.getElementById("VideoFile").files[0])
@@ -348,16 +354,45 @@
 
     function HandleCategory(e){
         let cateid = e.target.value;
+        const select = document.getElementById("SubCategoryId");
+        select.innerHTML = '';
          fetch(`/Admin/SubCategory/GetSubCategoryByCategoryId?id=${cateid}`)
          .then(res=>res.json())
          .then(data=>{
              console.log(data)
-             const select = document.getElementById("#SubCategoryId")
-             let op1 = document.cr
+             
+            let op1 = document.createElement("option");
+            op1.value = "0"
+            op1.innerHTML= "--không--"
+            op1.disabled = true;
+            op1.selected = true;
+            select.appendChild(op1)
              for(let i = 0; i<data.object.length; i++){
-
+                 let op = document.createElement("option");
+            op.value = data.object[i].id
+            op.innerHTML= data.object[i].subName
+            select.appendChild(op)
              }
          })
     }
+
+    function HandleChangeNameVn(e){
+        let text = e.target.value;
+
+        let str = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        const replacements = {
+            "đ": "d",
+            "Đ": "D"
+        };
+
+        str = str
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '');
+        document.getElementById("Slug").value = str;
+    } 
 
 </script>
