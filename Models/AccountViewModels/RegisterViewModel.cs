@@ -5,9 +5,15 @@ namespace Tommava.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
+        [Display(Name = "Họ tên")]
+        [Required(ErrorMessage = "Họ tên không được để trống")]
+        public string FullName { get; set; }
         [Display(Name = "Tài khoản")]
         [Required(ErrorMessage = "Tài khoản không được để trống")]
         public string UserName { get; set; }
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Email không được để trống")]
+        public string Email { get; set; }
         [Display(Name = "Mật Khẩu")]
         [Required(ErrorMessage = "Mật khẩu không được để trống")]
         [DataType(DataType.Password)]

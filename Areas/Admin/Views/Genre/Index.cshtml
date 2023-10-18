@@ -2,9 +2,9 @@
     <div class="col-12 row">
         <div class="col-3"><div v-on:click="AddGenre()" class="btn btn-success">Thêm thể loại</div></div>
     </div>
-    <div class="container mt-lg-2">
-        <table class="table table-striped" id="tableBrand">
-            <thead class="text-dark">
+    <div class="container mt-lg-2 col-12">
+        <table class="table table-striped" id="tableGenre">
+            <thead class="text-dark table-light">
                 <tr>
                     <th class="text-center">STT</th>
                     <th class="text-center">Tên Loại</th>
@@ -14,7 +14,6 @@
             <tr v-for="(item, index) in data">
                 <td class="text-center">{{index+1}}</td>
                 <td class="text-center">{{item.name}}</td>
-                <td class="text-center"><img :src=item.logo style="max-height: 100px; width: auto;" /></td>
                 <td class="text-center">
                     <span class="btn btn-warning" v-on:click="EditGenre(item.id)">Cập nhật</span>
                     <span class="btn btn-danger" v-on:click="DeleteGenre(item.id)">Xóa</span>

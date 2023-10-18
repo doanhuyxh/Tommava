@@ -4,10 +4,12 @@ using Tommava.Data;
 using Tommava.Models.VipPackageVM;
 using Tommava.Models;
 using Tommava.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tommava.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class VipPackageController : Controller
     {
         private readonly ApplicationDbContext _context;

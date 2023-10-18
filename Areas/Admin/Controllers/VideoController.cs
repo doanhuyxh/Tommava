@@ -12,6 +12,7 @@ using Tommava.Models.TimeLineVideoVM;
 namespace Tommava.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class VideoController : Controller
     {
         private readonly ApplicationDbContext _context;
