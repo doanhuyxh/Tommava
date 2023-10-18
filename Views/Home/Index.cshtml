@@ -1,8 +1,162 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
 }
+@model Tommava.Models.CombinedViewModel.CombinedViewModel
+<div class="row container-fluid content-home">
+    <div class="col-12 col-md-12 col-xl-12 bg-white">
+        <div class="top-link-parent-ct post">
+            <a href="/kien-thuc-kinh-nghiem"><span class="btn parent-cate">KIẾN THỨC</span></a>
+            <a href="/post/Hoi-dap=53"><span class="btn parent-cate">HỎI ĐÁP</span></a>
+        </div>
+       
+        <div class="container-video">
+            <h3 class="h3-home text-start"><a href="https://toomva.com/recommended">ĐƯỢC ĐỀ XUẤT</a></h3>
+            <div class="d-flex">
+                <div class="lv-body">
+                    <div id="carouselExampleControls" class="carousel slide img-head" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="/assets/Img/hqdefault (1).jpg" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="/assets/Img/hqdefault.jpg" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="/assets/Img/phat-am-tieng-anh-4.jpg" class="d-block w-100" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button"
+                                data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button"
+                                data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="right-slide-show">
+                    <div class="rs-grid-video">
+                        <a href="https://toomva.com/post/hoc-tieng-anh-hieu-qua-tren-toomva-khong-kho=1128">
+                            <div class="home-video-img rs" name="rs-slide-show">
+                                <img src="/assets/Img/phuong-phap-hoc-tieng-anh-toomva.jpg"
+                                     alt="Phương pháp học tiếng Anh trên Toomva"
+                                     title="Phương pháp học tiếng Anh trên Toomva">
+                            </div>
+                            <h4 class="title-e">Phương pháp học</h4>
+                        </a>
+                    </div><a href="/toomva-go" class="tv_go_a">
+                        <div class="tv-go-home-page">
+                            <div style=" border: .2em solid #fff; padding: .5em;overflow-y: unset; ">
+                                <div class="lv-bedge-video-go home"
+                                     style="float: right;display: block;background: url(/assets/Img/lv0.png) no-repeat;background-size: 80px 100%;width: 6em;height: 6em;">
+                                    <span style="font-size: 1.9em;font-weight: 600;position: relative;top: 1em;text-shadow: 0px .5px .5px #210b02;color: #fff;">100</span>
+                                </div>
+                                <div id="toomva-go-check2-content" style="color: yellow;">
+                                    <img src="/assets/Img/logo-toomva-go-white.png"
+                                         style="width: 12em;margin: .5em 0;">
+                                    <span class="content-tvg-inf tv_home">Tăng Tốc Kỹ Năng Nghe</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        </div>
+
+        <div class="content-video">
+            <h3 class="h3-home text-start"><a href="https://toomva.com/recommended">Phim mới đăng</a></h3>
+
+            <div class="row p-lg-2">
+                @foreach (var item in Model.VideoData)
+                {
+                    <h1></h1>
+                    <div class="col-6 col-md-3 col-xl-3 mb-4">
+                        <a href="#">
+                            <div class="card" style="width: 18rem;">
+                                <img src="@item.Img"
+                                     class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title mt-3 title-video">@item.Name</h5>
+                                    <p class="card-text eng-title">
+                                        @item.Description
+                                    </p>
+                                    <div class="card-text d-flex justify-content-between sub-eng">
+                                        <div>
+                                            708 lượt xem
+                                        </div>
+                                        <div>
+                                            @item.CategoryName
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+                
+
+            </div>
+        </div>
+      
+       
+        <hr>
+        @foreach (var item in Model.CategoryData)
+        {
+            <h3 class="h3-home text-start"><a href="https://toomva.com/recommended">@item.Name</a></h3>
+
+            <div class="row p-lg-2">
+                @foreach (var video in item.listDataVideo)
+                {
+                    <div class="col-6 col-md-3 col-xl-3 mb-4">
+                        <a href="#">
+                            <div class="card" style="width: 18rem;">
+                                <img src="@video.Img"
+                                     class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title mt-3 title-video">@video.Name</h5>
+                                    <p class="card-text eng-title">
+                                        @video.Description
+                                    </p>
+                                    <div class="card-text d-flex justify-content-between sub-eng">
+                                        <div>
+                                            708 lượt xem
+                                        </div>
+                                        <div>
+                                            @video.CategoryName
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+
+            </div>
+
+        }
+       
+        <footer class="footer-home d-flex justify-content-center">
+            <div class="footer-1">
+                <a href="/">
+                    <img _ngcontent-teq-97="" class="logo"
+                         src="/assets/Img/logo-toomva.png" alt="Toomva">
+                </a> <a _ngcontent-teq-97=""
+                        class="link" href="/">Home</a> <a _ngcontent-teq-97="" class="link" href="/about">About</a>
+            </div>
+            <div class="footer-2 d-flex">
+                <span class="footer-2-lien-he">Liên hệ hỗ trợ:</span>
+                <span class="hotline m-r-20"> <i class="fa fa-phone"></i> 081.365.8688 </span>
+                <span class="email">
+                    <i class="fa fa-envelope"></i> info@toomva.com
+                </span>
+            </div>
+
+        </footer>
+    </div>
 </div>

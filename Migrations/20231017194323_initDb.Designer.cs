@@ -12,7 +12,7 @@ using Tommava.Data;
 namespace Tommava.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231011204546_initDb")]
+    [Migration("20231017194323_initDb")]
     partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

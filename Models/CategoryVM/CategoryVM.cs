@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Tommava.Models.videoVM;
 
 namespace Tommava.Models.CategoryVM
 {
@@ -11,6 +12,9 @@ namespace Tommava.Models.CategoryVM
         public IFormFile IconFile { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool IsDeleted { get; set; }
+        public string Slug { get; set; }
+
+        public List<VideoVM> listDataVideo { get; set; }
 
         public static implicit operator CategoryVM(Category category)
         {
@@ -21,6 +25,7 @@ namespace Tommava.Models.CategoryVM
                 CreatedDate = category.CreatedDate,
                 IsDeleted = category.IsDeleted,
                 Icon = category.Icon,
+                Slug = category.Slug,
             };
         }
 
@@ -33,6 +38,7 @@ namespace Tommava.Models.CategoryVM
                 CreatedDate = vm.CreatedDate,
                 IsDeleted = vm.IsDeleted,
                 Icon = vm.Icon??"",
+                Slug = vm.Slug,
             };
         }
     }

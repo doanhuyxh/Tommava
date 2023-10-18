@@ -1,0 +1,37 @@
+﻿@model List<Tommava.Models.videoVM.VideoVM>
+
+@foreach (var item in Model)
+{
+    <h3 class="h3-home text-start"><a href="https://toomva.com/recommended">@item.Name</a></h3>
+
+    <div class="row p-lg-2">
+        @foreach (var video in item.listDataVideo)
+        {
+            <div class="col-6 col-md-3 col-xl-3 mb-4">
+                <a href="#">
+                    <div class="card" style="width: 18rem;">
+                        <img src="@video.Img"
+                             class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title mt-3 title-video">@video.Name</h5>
+                            <p class="card-text eng-title">
+                                @video.Description
+                            </p>
+                            <div class="card-text d-flex justify-content-between sub-eng">
+                                <div>
+                                    708 lượt xem
+                                </div>
+                                <div>
+                                    @video.CategoryName
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+        
+
+    </div>
+   
+}

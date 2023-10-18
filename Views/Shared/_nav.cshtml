@@ -1,0 +1,83 @@
+﻿@model Tommava.Models.CombinedViewModel.CombinedViewModel
+<nav id="menu-home" class="menu-home">
+    <a href="/"><button class="c-menu__close"><i class="fa fa-home" aria-hidden="true"></i></button></a>
+    <ul class="c-menu-home">
+        @foreach (var category in Model.CategoryData)
+        {
+            <a href="/Video-Hoc-Tieng-Anh/c=45" class="c-menu__link">
+            <li class="c-menu__item"><i class="fa fa-leanpub" aria-hidden="true"></i>@category.Name</li>
+            </a>
+        }
+
+        <hr>
+        <div>
+            <div class="group_nav">
+                <a href="/kien-thuc-kinh-nghiem" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-book fa-lg" aria-hidden="true">
+
+            </i>Kiến thức - Kinh
+            nghiệm
+        </li>
+        </a>
+        </div>
+        <div class="sub_nav">
+            <a href="/Ngu-phap-tieng-Anh/pc=3" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Ngữ pháp tiếng Anh
+        </li>
+        </a>
+        <a href="/Ngu-phap-tieng-Anh-can-ban/pc=16" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Ngữ pháp căn bản
+        </li>
+        </a>
+        <a href="/Ngu-phap-tieng-anh-nang-cao/pc=19" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Ngữ pháp nâng cao
+        </li>
+        </a>
+        <a href="/kinh-nghiem-ky-nang/pc=17" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Kinh nghiệm, Kỹ năng
+        </li>
+        </a>
+        <a href="/post/ngu-phap-tieng-anh-bai-giang-bang-video=599" class="c-menu__link">
+        <li class="c-menu__item"><i class="fa fa-book fa-lg" aria-hidden="true"></i>Bài giảng video</li>
+        </a>
+        <a href="/Cau-truc-cau-tieng-Anh/pc=12" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Câu trong tiếng Anh
+        </li>
+        </a>
+        <a href="/Tu-vung-tieng-Anh/pc=11" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-file-word-o fa-lg" aria-hidden="true"></i>Từ vựng tiếng
+            Anh
+        </li>
+        </a>
+        <a href="/Tai-lieu-tieng-Anh/pc=13" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-download fa-lg" aria-hidden="true"></i>Tài liệu tiếng
+            Anh
+        </li>
+        </a>
+        <a href="/Tieng-Anh-chuyen-nganh/pc=14" class="c-menu__link">
+        <li class="c-menu__item">
+            <i class="fa fa-cogs fa-lg" aria-hidden="true"></i>Tiếng Anh chuyên
+            ngành
+        </li>
+        </a>
+        </div>
+        </div>
+        <hr>
+        <a href="/doc-bao-anh-viet/pc=8" class="c-menu__link">
+        <li class="c-menu__item"><i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i>Đọc báo Anh-Việt</li>
+        </a>
+        <hr>
+        <li style="margin-bottom: 10em;">
+            <span class="menu-footer"
+                  style="text-align:center;display:block;">...</span><br><br><br><br><br>
+        </li>
+    </ul>
+</nav>

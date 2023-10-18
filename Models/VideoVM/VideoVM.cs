@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tommava.Models.videoVM
 {
@@ -25,7 +26,17 @@ namespace Tommava.Models.videoVM
         public IFormFile? VideoFile { get; set; }
         [Display(Name = "Ảnh đại diện")]
         public IFormFile? ImgFile { get; set; }
-       
+
+        public List<VideoVM> listDataVideo { get; set; }
+
+        public List<Category> listCate { get; set; }
+
+
+        public int ViewCount { get; set; } = 0;
+
+        public int SubCategoryId { get; set; } = 0;
+        public string NameVn { get; set; }
+        public string Slug { get; set; }
 
         public static implicit operator VideoVM(Video video)
         {
@@ -42,6 +53,11 @@ namespace Tommava.Models.videoVM
                 IsActive = video.IsActive,
                 CreatedDate = video.CreatedDate,
                 IsDeleted = video.IsDeleted,
+                ViewCount = video.ViewCount,
+                SubCategoryId = video.SubCategoryId,   
+                NameVn = video.NameVn,
+                Slug = video.Slug,
+
             };
         }
         public static implicit operator Video(VideoVM vm)
@@ -59,6 +75,10 @@ namespace Tommava.Models.videoVM
                 CategoryId = vm.CategoryId,
                 CreatedDate = vm.CreatedDate,
                 IsDeleted = vm.IsDeleted,
+                ViewCount = vm.ViewCount,
+                SubCategoryId = vm.SubCategoryId,
+                NameVn = vm.NameVn,
+                Slug = vm.Slug,
             };
         }
     }
