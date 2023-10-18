@@ -33,10 +33,12 @@ namespace Tommava.Models.videoVM
         public List<TimeLineVideoVM.TimeLineVideoVM> listTimeLine { get; set; }
 
 
-        public int ViewCount { get; set; } = 0;
-
-        public int SubCategoryId { get; set; } = 0;
+        public int? ViewCount { get; set; } = 0;
+        [Display(Name = "Danh mục phụ")]
+        public int? SubCategoryId { get; set; } = 0;
+        [Display(Name ="Tên tiếng việt")]
         public string NameVn { get; set; }
+        [Display(Name = "Slug")]
         public string Slug { get; set; }
 
         public static implicit operator VideoVM(Video video)

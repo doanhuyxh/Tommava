@@ -9,13 +9,23 @@
     <input hidden asp-for="VideoLink" />
     <input hidden asp-for="IsActive" />
     <input hidden asp-for="IsHome" />
-
+    <input hidden asp-for="ViewCount" />
 
 
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NameVn" class="control-label"></label>
+        <input asp-for="NameVn" class="form-control" onkeyup="HandleChangeNameVn(event)" />
+        <span asp-validation-for="NameVn" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Slug" class="control-label"></label>
+        <input asp-for="Slug" class="form-control" />
+        <span asp-validation-for="Slug" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
@@ -25,10 +35,18 @@
     <div class="form-group">
         <label asp-for="CategoryId" class="form-label"></label>
         <div class="container">
-            <select asp-for="CategoryId" asp-items="@ViewBag.Cate" class="form-control">
+            <select asp-for="CategoryId" asp-items="@ViewBag.Cate" class="form-control" onchange="HandleCategory(event)">
                 <option value="0" selected disabled>--- Không  ---</option>
             </select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="SubCategoryId" class="form-label"></label>
+        <div class="container">
+            <select asp-for="SubCategoryId" class="form-control">
+            </select>
+            <span asp-validation-for="SubCategoryId" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
