@@ -87,7 +87,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalAddTimeLineTitleExcel">TimeLine</h5>
                     <button type="button" class="btn btn-success" v-on:click="DonwloadExcel">
-                        <i class="fa-solid fa-download" style="color: #18af2a;"></i>
+                        <i class="fa-solid fa-download" style="color: #30453c;"></i>
                     </button>
                 </div>
                 <div class="modal-body" id="ModalAddTimeLineContentExcel">
@@ -120,8 +120,7 @@
             initData() {
                 fetch("/Admin/Video/GetData")
                     .then(res => res.json())
-                    .then(data => {
-                        console.log(data.object)
+                    .then(data => {                        
                         this.data = data.object;
                     })
             },
@@ -237,6 +236,7 @@
             },
             SaveTimeLineExcel() {
                 let _data = new FormData();
+                $('#preloader').fadeIn();
                 for (let i = 0; i < TimeLineExcel.$data.data.length; i++) {
                     _data.append(`vm[${i}][Id]`, 0)
                     _data.append(`vm[${i}][TimePoint]`, TimeLineExcel.$data.data[i].Time)
@@ -255,6 +255,7 @@
                 })
                     .then(res => res.json())
                     .then(res => {
+                        $('#preloader').fadeOut();
                         $("#ModalAddTimeLineExcel").modal("hide");
                     })
             },

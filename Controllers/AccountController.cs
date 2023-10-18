@@ -36,12 +36,10 @@ namespace Tommava.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
-        [Route("Login")]
+        [HttpGet]        
         public IActionResult Login() { return View(); }
 
         [HttpGet]
-        [Route("Register")]
         public IActionResult Register() { return View(); }
 
         [HttpPost]
