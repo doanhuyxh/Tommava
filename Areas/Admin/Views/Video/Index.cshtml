@@ -108,13 +108,15 @@
         el: "#AppVueVideo",
         data: {
             data: [],
-            currentVideoId: 0
+            currentVideoId: 0,
+            ckName : "",
         },
         computed: {
 
         },
         mounted() {
             this.initData();
+
         },
         methods: {
             initData() {
@@ -282,7 +284,7 @@
         _data.append("IsActive", $("#IsActive").val())
         _data.append("IsHome", $("#IsHome").val())
         _data.append("Name", $("#Name").val())
-        _data.append("Description", $("#Description").val())
+        _data.append("Description", form_video.$data.ckName)
         _data.append("CategoryId", $("#CategoryId").val())
         _data.append("NameVn", $("#NameVn").val())
         _data.append("Slug", $("#Slug").val())

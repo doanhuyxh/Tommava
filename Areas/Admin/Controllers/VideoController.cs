@@ -8,6 +8,7 @@ using Tommava.Models;
 using Microsoft.EntityFrameworkCore;
 using Tommava.Services;
 using Tommava.Models.TimeLineVideoVM;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Tommava.Areas.Admin.Controllers
 {
@@ -17,10 +18,36 @@ namespace Tommava.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _icommon;
-        public VideoController(ApplicationDbContext context, ICommon common)
+        private readonly IWebHostEnvironment _env;
+
+        public VideoController(ApplicationDbContext context, ICommon common, IWebHostEnvironment env)
         {
             _context = context;
             _icommon = common;
+            _env = env;
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult UploadLocalMain(List<IFormFile> files, [FromServices] IUrlHelperFactory urlHelperFactory)
+        {
+            var filePaths = new List<string>();
+
+            foreach (IFormFile photo in Request.Form.Files)
+            {
+                string sv = Path.Combine(_env.WebRootPath, "upload", photo.FileName);
+                using (var stream = new FileStream(sv, FileMode.Create))
+                {
+                    photo.CopyTo(stream);
+                }
+                string relativePath = $"~/upload/{photo.FileName}";
+                string absolutePath = Url.Content(relativePath);
+
+                filePaths.Add(absolutePath);
+            }
+
+            return Json(new { urls = filePaths });
         }
         public IActionResult Index()
         {
