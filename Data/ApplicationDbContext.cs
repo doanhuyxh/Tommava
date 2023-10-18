@@ -15,6 +15,7 @@ namespace Tommava.Data
         public DbSet<TimeLineVideo> TimeLineVideo { get; set; }
         public DbSet<Bank> Bank { get; set; }
         public DbSet<VipPackage> VipPackage { get; set; }
+        public DbSet<SubCategories> SubCategories { get; set; }
         
     }
 }

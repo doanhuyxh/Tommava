@@ -61,6 +61,11 @@ namespace Tommava.Areas.Admin.Controllers
                                            select new ItemDropDown { Id = _l.Id, Name = _l.Name }).ToList();
             ViewBag.Cate = new SelectList(itemCate, "Id", "Name");
 
+            List<ItemDropDown> itemSubCate = (from _l in _context.SubCategories
+                                           where _l.IsDeleted == false
+                                           select new ItemDropDown { Id = _l.Id, Name = _l.SubName }).ToList();
+            ViewBag.SubCate = new SelectList(itemSubCate, "Id", "Name");
+
             List<ItemDropDown> itemGenre = (from _l in _context.Genre
                                             where _l.IsDeleted == false
                                             select new ItemDropDown { Id = _l.Id, Name = _l.Name }).ToList();
@@ -102,7 +107,7 @@ namespace Tommava.Areas.Admin.Controllers
                         }
                         if (vm.VideoFile != null)
                         {
-                            vm.VideoLink = await _icommon.UploadImgVideoAsync(vm.VideoFile);
+                            vm.VideoLink = await _icommon.UploadVideoAsync(vm.VideoFile);
                         }
                         video = vm;
                         video.CreatedDate = DateTime.Now;

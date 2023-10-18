@@ -6,7 +6,7 @@ namespace Tommava.Models.videoVM
     public class VideoVM
     {
         public int Id { get; set; }
-        [Display(Name = "Tên video")]
+        [Display(Name = "Tên tiếng anh")]
         public string Name { get; set; }
         [Display(Name = "Chi tiết video")]
         public string Description { get; set; }
@@ -33,9 +33,11 @@ namespace Tommava.Models.videoVM
 
 
         public int ViewCount { get; set; } = 0;
-
+        [Display(Name = "Danh mục phụ")]
         public int SubCategoryId { get; set; } = 0;
+        [Display(Name ="Tên tiếng việt")]
         public string NameVn { get; set; }
+        [Display(Name = "Slug")]
         public string Slug { get; set; }
 
         public static implicit operator VideoVM(Video video)

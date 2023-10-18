@@ -5,21 +5,25 @@ namespace Tommava.Models.SubCategoryViewModels
 {
     public class SubCategoryCRUD
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
+        [Display(Name = "Danh mục")]
         public int? CategoriesId { get; set; }
+        [Display(Name = "Tên danh mục phụ")]
         public string? SubName { get; set; }
+        [Display(Name = "Slug")]
         public string? Slug { get; set; }
         public string? NameCategory { get; set; }
+        public bool IsDeleted { get; set; }
 
         public static implicit operator SubCategoryCRUD(SubCategories _PrModel)
         {
             return new SubCategoryCRUD
             {
-                ID = _PrModel.ID,
+                Id = _PrModel.Id,
                 SubName = _PrModel.SubName,
                 CategoriesId = _PrModel.CategoriesId,
                 Slug = _PrModel.Slug,
-              
+                IsDeleted = _PrModel.IsDeleted,
             };
         }
 
@@ -27,10 +31,11 @@ namespace Tommava.Models.SubCategoryViewModels
         {
             return new SubCategories
             {
-                ID = vm.ID,
+                Id = vm.Id,
                 SubName = vm.SubName,
                 CategoriesId = vm.CategoriesId,
                 Slug = vm.Slug,
+                IsDeleted= vm.IsDeleted,
             };
         }
     }

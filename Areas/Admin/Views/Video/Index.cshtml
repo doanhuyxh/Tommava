@@ -269,7 +269,6 @@
 
 
     function Save() {
-
         let _data = new FormData()
         _data.append("Id", $("#Id").val())
         _data.append("CreatedDate", $("#CreatedDate").val())
@@ -280,6 +279,7 @@
         _data.append("Name", $("#Name").val())
         _data.append("Description", $("#Description").val())
         _data.append("CategoryId", $("#CategoryId").val())
+        _data.append("NameVn", $("#NameVn").val())
         _data.append("GenreId", $("#GenreId").val())
         _data.append("ImgFile", document.getElementById("ImgFile").files[0])
         _data.append("VideoFile", document.getElementById("VideoFile").files[0])
@@ -330,7 +330,7 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then((res) => { 
-                                
+
                                 AppVueVideo.ViewTimeLine()
                             });
                         }
@@ -344,6 +344,20 @@
             $("#ModalAddTimeLineTitle").html("Cập nhật");
             $("#ModalAddTimeLine").modal("show");
         })
+    }
+
+    function HandleCategory(e){
+        let cateid = e.target.value;
+         fetch(`/Admin/SubCategory/GetSubCategoryByCategoryId?id=${cateid}`)
+         .then(res=>res.json())
+         .then(data=>{
+             console.log(data)
+             const select = document.getElementById("#SubCategoryId")
+             let op1 = document.cr
+             for(let i = 0; i<data.object.length; i++){
+
+             }
+         })
     }
 
 </script>
