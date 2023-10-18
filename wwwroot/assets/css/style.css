@@ -521,6 +521,45 @@ span.search-views.single {
     height: auto;
     object-fit: cover;
 }
+div.botom-scroll-sub,
+div.botom-scroll-sub-top {
+    background: linear-gradient(45deg,teal 2%,#228b22 54%,#54b558 97%);
+}
+div.botom-scroll-sub-top {
+    display: inline-flex;
+    color: #fff;
+    width: 100%;
+}
+div.botom-scroll-sub {
+    position: relative;
+    display: block;
+}
+span.info-video-mobile {
+    width: 25%;
+    height: 100%;
+    display: block;
+    padding-top: 0.3em;
+    padding-bottom: 0.5em;
+}
+span.info-video-mobile, span.title-scroll {
+    float: left;
+    font-weight: 600;
+    border-right: 1px solid;
+    text-align: center;
+    cursor: pointer;
+}
+div.mediamenu {
+    bottom: 3.85em;
+}
+span#video_obtion {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
 @media (min-width: 1260px) {
     nav.menu-home {
         display: block;
@@ -555,7 +594,8 @@ span.search-views.single {
         text-align: left;
         color: #777;
     }
-
+    div.botom-scroll-sub-top {
+    }
 } 
 @media (min-width: 1024px) {
     span.flag.single > img {

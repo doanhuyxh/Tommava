@@ -74,20 +74,19 @@
             <div class="row p-lg-2">
                 @foreach (var item in Model.VideoData)
                 {
-                    <h1></h1>
                     <div class="col-6 col-md-3 col-xl-3 mb-4">
                         <a href="/video/@item.Slug?id=@item.Id">
                             <div class="card" style="width: 18rem;">
                                 <img src="@item.Img"
-                                     class="card-img-top" alt="...">
+                                     class="card-img-top" alt="..." style="width: 100%;height: 214px;object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title mt-3 title-video">@item.Name</h5>
                                     <p class="card-text eng-title">
-                                        @item.Description
+                                        @item.NameVn
                                     </p>
                                     <div class="card-text d-flex justify-content-between sub-eng">
                                         <div>
-                                            708 lượt xem
+                                            @item.ViewCount lượt xem
                                         </div>
                                         <div>
                                             @item.CategoryName
@@ -120,11 +119,12 @@
                                 <div class="card-body">
                                     <h5 class="card-title mt-3 title-video">@video.Name</h5>
                                     <p class="card-text eng-title">
-                                        @video.Description
+                                        @video.NameVn
                                     </p>
                                     <div class="card-text d-flex justify-content-between sub-eng">
                                         <div>
-                                            708 lượt xem
+                                            @video.ViewCount lượt xem
+
                                         </div>
                                         <div>
                                             @video.CategoryName

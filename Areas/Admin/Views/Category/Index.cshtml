@@ -2,8 +2,8 @@
     <div class="col-12 row">
         <div class="col-3"><div v-on:click="AddCategory()" class="btn btn-success">Thêm danh mục</div></div>
     </div>
-    <div class="container mt-lg-2">
-        <table class="table table-striped" id="tableBrand">
+    <div class="container mt-lg-2 col-12">
+        <table class="table table-striped" id="tableCategory">
             <thead class="text-dark">
                 <tr>
                     <th class="text-center">STT</th>
@@ -15,7 +15,7 @@
             <tr v-for="(item, index) in data">
                 <td class="text-center">{{index+1}}</td>
                 <td class="text-center">{{item.name}}</td>
-                <td class="text-center"><img :src="item.icon" style="height: 50px; width:auto; border-radius: 20px"/></td>
+                <td class="text-center"><img :src="item.icon" style="height: 50px; width:auto; border-radius: 20px" /></td>
                 <td class="text-center">
                     <span class="btn btn-warning" v-on:click="EditCategory(item.id)">Cập nhật</span>
                     <span class="btn btn-danger" v-on:click="DeleteCategory(item.id)">Xóa</span>

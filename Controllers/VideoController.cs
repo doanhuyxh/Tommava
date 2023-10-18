@@ -22,6 +22,7 @@ namespace Tommava.Controllers
         [Route("video/{slug}")]
         public async Task <IActionResult> Index(string slug, int id)
         {
+            ViewBag.userName = User.Identity.Name;
             ViewBag.Slug = slug;
             var pr = (from _pr in _context.Video
                      where _pr.Id == id
@@ -33,6 +34,7 @@ namespace Tommava.Controllers
                          Name = _pr.Name,
                          NameVn = _pr.NameVn,
                          ViewCount = _pr.ViewCount,
+                         Description = _pr.Description,
                          listTimeLine = _context.TimeLineVideo
                                         .Where(img => img.VideoId == id)
                                         .Select(img => new TimeLineVideoVM

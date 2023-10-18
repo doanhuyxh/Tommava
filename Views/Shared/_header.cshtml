@@ -10,9 +10,12 @@
             </svg>
         </button>
         <div class="logo-header float-start d-flex align-items-center">
-            <div class="img-logo">
-                <img src="/assets/Img/logo-toomva.png" alt="logo web">
-            </div>
+            <a href="/">
+                <div class="img-logo">
+                    <img src="/assets/Img/logo-toomva.png" alt="logo web">
+                </div>
+            </a>
+            
         </div>
         <div class="d-flex justify-content-between align-items-center ">
             <div class="wrap">
@@ -28,11 +31,23 @@
                     <button class="btn btn-danger">Mua VIP</button>
 
                 </div>
-                <div id="user-login-done">
-                    <div class="a-link-user">
-                        <a href="#">abcbcbbcbc</a>
+                @if (ViewBag.userName != null)
+                {
+                    <div id="user-login-done">
+                        <div class="a-link-user">
+                            <a href="#">@ViewBag.userName</a>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div>
+                        <a href="/Account/Register" class="btn btn-secondary">Đăng ký</a>
+                        <a href="/Account/Login" class="btn btn-success">Đăng nhập</a>
+                    </div>
+
+                }
+
             </div>
         </div>
 

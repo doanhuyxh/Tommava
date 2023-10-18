@@ -25,6 +25,7 @@ namespace Tommava.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.userName = User.Identity.Name;
             var rs = await (from i in _context.Video
                             where i.IsDeleted == false
                             select new VideoVM

@@ -1,4 +1,4 @@
-﻿<nav id="menu-home" class="menu-home d-none">
+﻿<nav id="menu-home" class="menu-home ">
     <a href="/"><button class="c-menu__close"><i class="fa fa-home" aria-hidden="true"></i></button></a>
     <ul class="c-menu-home">
             <a href="/Video-Hoc-Tieng-Anh/c=45" class="c-menu__link">
@@ -77,3 +77,18 @@
         </li>
     </ul>
 </nav>
+<script>
+
+    $(document).ready(function () {
+        var currentURL = window.location.href;
+        const currentDomain = window.location.origin;
+        if (currentURL.endsWith('/')) {
+            currentURL = currentURL.slice(0, -1);
+        }
+        if (currentURL !== currentDomain) {
+            $("#menu-home").hide();
+        } else {
+            $("#menu-home").show();
+        }
+    });
+</script>

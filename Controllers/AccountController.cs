@@ -50,15 +50,7 @@ namespace Tommava.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByNameAsync(model.UserName);
-            string fullname = "";
-            try
-            {
-                fullname += user.FullName;
-            }
-            catch (Exception ex)
-            {
-                fullname = user.Email;
-            }
+            
 
             if (user != null && !user.IsActive)
             {
