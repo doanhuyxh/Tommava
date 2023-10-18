@@ -8,6 +8,7 @@
                 <tr>
                     <th class="text-center">STT</th>
                     <th class="text-center">Tên danh mục</th>
+                    <th class="text-center">Slug</th>
                     <th class="text-center">Icon</th>
                     <th class="text-center"></th>
                 </tr>
@@ -15,6 +16,7 @@
             <tr v-for="(item, index) in data">
                 <td class="text-center">{{index+1}}</td>
                 <td class="text-center">{{item.name}}</td>
+                <td class="text-center">{{item.slug}}</td>
                 <td class="text-center"><img :src="item.icon" style="height: 50px; width:auto; border-radius: 20px" /></td>
                 <td class="text-center">
                     <span class="btn btn-warning" v-on:click="EditCategory(item.id)">Cập nhật</span>
@@ -33,7 +35,7 @@
         data: {
             data: [],
             NameCategory: "",
-            SlugCategory:"",
+            SlugCategory: "",
         },
         computed: {
             computedSlug() {
@@ -47,6 +49,8 @@
         },
         mounted() {
             this.initData();
+
+
         },
         methods: {
             generateSlug(text) {
@@ -130,9 +134,9 @@
         var _data = new FormData()
         _data.append("Id", $("#Id").val())
         _data.append("CreatedDate", $("#CreatedDate").val())
-        _data.append("Name", form_category.$data.NameCategory)
+        _data.append("Name", $("#Name").val())
         _data.append("Icon", $("#Icon").val())
-        _data.append("Slug", form_category.$data.SlugCategory)
+        _data.append("Slug", $("#Slug").val())
         _data.append("IconFile", document.getElementById("IconFile").files[0])
 
         fetch("/Admin/Category/AddData", {

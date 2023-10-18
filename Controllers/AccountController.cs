@@ -37,9 +37,11 @@ namespace Tommava.Controllers
         }
 
         [HttpGet]
+        [Route("Login")]
         public IActionResult Login() { return View(); }
 
         [HttpGet]
+        [Route("Register")]
         public IActionResult Register() { return View(); }
 
         [HttpPost]
@@ -50,7 +52,15 @@ namespace Tommava.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByNameAsync(model.UserName);
-            
+            string fullname = "";
+            try
+            {
+                fullname += user.FullName;
+            }
+            catch (Exception ex)
+            {
+                fullname = user.Email;
+            }
 
             if (user != null && !user.IsActive)
             {
@@ -118,8 +128,7 @@ namespace Tommava.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+
                 ApplicationUser user = model;
                 var result = await _userManager.CreateAsync(user, model.PasswordHash);
 
@@ -136,7 +145,7 @@ namespace Tommava.Controllers
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-            }
+
             return View(model);
         }
 
@@ -145,7 +154,7 @@ namespace Tommava.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); // Chuyển hướng đến trang chủ hoặc trang khác
+            return RedirectToAction("Index", "Home"); 
         }
 
         public IActionResult AccessDenied()

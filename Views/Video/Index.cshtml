@@ -117,7 +117,7 @@
     div.scroll-sub {
         position: relative;
         overflow-y: auto;
-        height: 69%;
+        max-height: 39em;
         background: #fff;
     }
 
@@ -130,23 +130,23 @@
     }
 
     .sub-line {
-        padding: 14px  8px;
+        padding: 14px 8px;
         border-bottom: 1px solid #ccc;
     }
 
-    .word{
+    .word {
         position: relative;
     }
 
-    .word:hover {
-        color: yellow;
-    }
+        .word:hover {
+            color: yellow;
+        }
 
     #result {
         border-top-left-radius: 10px;
-        border-top-right-radius: 10px; 
-        border-bottom-right-radius: 10px; 
-        border-bottom-left-radius: 10px; 
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
         background: #fff;
         position: absolute;
         width: 445px;
@@ -157,21 +157,134 @@
         visibility: hidden;
     }
 
+    div.speed-list-yt {
+        position: absolute;
+        width: 160px;
+        background: #fffacd;
+        bottom: 1.5em;
+        right: 4px;
+        padding: 0.4em 0.8em 0.8em;
+        font-size: 16px;
+        z-index: 100;
+        border-radius: 10px;
+        border: 2px solid gray;
+        color: gray;
+        transform: translateY(-3%);
+        transition: .1s;
+        float: right;
+    }
+
+        div.speed-list-yt li {
+            list-style-type: none;
+        }
+
+    .video_opt_item_title.text-center {
+        padding: 16px 6px;
+        font-weight: 600;
+        color: gray;
+        font-size: 116%;
+    }
+
+    .video_opt_item {
+        display: inline-flex;
+        width: 90%;
+        cursor: pointer;
+        color: teal;
+        margin: 2% 5%;
+        border-radius: 30px;
+        padding-top: 2px;
+    }
+
+        .video_opt_item > div:first-of-type {
+            width: 16%;
+            display: flex;
+            padding-top: 7px;
+            padding-left: 4%;
+            text-align: left;
+            height: 47px;
+        }
+
+            .video_opt_item > div:first-of-type > input {
+                margin-top: 0.3em;
+                margin-left: 0.4em;
+            }
+
+    input.toomva_checkbox, input.toomva_radio {
+        -webkit-appearance: radio;
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+    }
+
+    .video_opt_item > div.video_opt_item_content {
+        width: 84%;
+        text-align: left;
+        border-left: 1.5px solid #9999;
+        padding-left: 9px;
+    }
+
+    .video_opt_item_content > span:first-of-type {
+        line-height: 24px;
+        font-weight: 600;
+    }
+
+    .video_opt_item_content > span:last-of-type {
+        height: 24px;
+        color: grey;
+        margin-top: -4px;
+        display: flex;
+    }
+
+    .video_opt_item.group {
+        cursor: unset;
+    }
+
+        .video_opt_item.group.subtitle > .video_opt_item_icon {
+            margin-top: 4em;
+        }
+
+    .video_opt_item_icon > i.fa.fa-cc.fa-2x {
+        font-size: 1.6em;
+        margin-top: 3px;
+    }
+
+    .video_opt_item_icon > i, i.sound:hover {
+        color: gray;
+    }
+
+    .video_opt_sub_item_group_opt {
+        cursor: pointer;
+        height: 24px;
+        margin-bottom: 5px;
+        margin-right: 24px;
+        border-radius: 12px;
+        width: 226px;
+    }
+
+        .video_opt_sub_item_group_opt > input {
+            height: 15px;
+            margin-top: 4px;
+        }
+
+    span.video_opt_sub_item_content_desc {
+        position: absolute;
+        margin-left: 5px;
+    }
 </style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-md-12 col-xl-9" style="position: relative;">
-            <video controls  style="width: 100%; height: auto;" id="video">
+            <video controls style="width: 100%; height: auto;" id="video">
                 <source src="@Model.VideoVMOj.VideoLink" type="video/mp4">
             </video>
-            <div class="cue-display wsshadow-1697613594557" style="position: absolute; bottom: 400px; left: 50%; transform: translateX(-50%);  color: white; text-align: center; padding: 10px;">
+            <div class="cue-display wsshadow-1697613594557" style="position: absolute;top: 22em; left: 50%; transform: translateX(-50%);  color: white; text-align: center; padding: 10px;">
                 <span class="description-cues" aria-live="assertive"></span>
                 <span class="cue-wrapper" id="cue-wrapper" style="font-size: 150%;">
                     <span class="cue-line">
                         <span class="cue">
                         </span>
                     </span>
-                    
+
                     <span class="cue-line"></span>
                 </span>
                 <div id="result">
@@ -187,7 +300,6 @@
                     </div>
                     <div>
                         <div class="loading">
-
                         </div>
                         Nghĩa của từ:
                         <ul id="meaning-list">
@@ -229,24 +341,155 @@
             <div id="DataTable" class="scroll-sub">
                 @foreach (var item in Model.VideoVMOj.listTimeLine)
                 {
-                    <div class="sub-line" data-time="@item.TimePoint" style="cursor: pointer;">
-                        <span class="sub_en">
-                            @item.English
-                        </span>
+                    <div class="sub-line" data-time="@item.TimePoint" style="cursor: pointer;" data-index="@(Model.VideoVMOj.listTimeLine.IndexOf(item))">
+                        <span class="sub_en">@item.English</span>
                         <span class="sub_vi">@item.Vietnamese</span>
                         <span class="show-time-second">@item.TimePoint</span>
                     </div>
                 }
             </div>
-           
+            <div id="configVideo" class="scroll-sub">
+                <div class="video_opt_item_title text-center"> <span>Chức năng hỗ trợ học tiếng Anh</span> </div>
+                <div class="video_opt_item copy-ensub">
+                    <div class="video_opt_item_icon"> <i class="fa-regular fa-copy"></i> </div>
+                    <div class="video_opt_item_content">
+                        <span class="video_opt_item_content_main">Copy Sub Anh</span>
+                        <span class="video_opt_item_content_desc">Lưu phụ đề tiếng Anh về máy</span>
+                    </div>
+
+                </div>
+                <div class="video_opt_item copy-visub">
+                    <div class="video_opt_item_icon"><i class="fa-regular fa-copy"></i> </div>
+                    <div class="video_opt_item_content">
+                        <span class="video_opt_item_content_main">Copy Sub Việt</span>
+                        <span class="video_opt_item_content_desc">Lưu phụ đề tiếng Việt về máy</span>
+                    </div>
+                </div>
+                <hr />
+                <div class="video_opt_item auto_prev_opt_item">
+                    <div class="video_opt_item_icon"> <input type="checkbox" class="toomva_radio" name="auto_next" id="AutoPrev" onclick="toggleVideoLoop()"> </div>
+                    <div class="video_opt_item_content">
+                        <span class="video_opt_item_content_main">
+                            Play lặp
+                            lại
+                        </span> <span class="video_opt_item_content_desc">
+                            Play lặp lại từ đầu khi hết
+                            video
+                        </span>
+                    </div>
+                </div>
+                <hr />
+                <div class="video_opt_item group subtitle">
+                    <div class="video_opt_item_icon">
+                        <i class="fa-solid fa-closed-captioning"></i>
+                    </div>
+                    <div class="video_opt_item_content">
+                        <span class="video_opt_item_content_main">
+                            Phụ
+                            đề
+                        </span> <span class="video_opt_item_content_desc">
+                            Tuỳ chọn phụ đề trong
+                            video
+                        </span>
+                        <div class="video_opt_item_group_opt">
+                            <div class="video_opt_sub_item_group_opt">
+                                <input type="radio" class="toomva_radio" name="choosesub" id="cs_1" value="none"> <span class="video_opt_sub_item_content_desc">
+                                    Tắt                                                     <span class="sub_keycode_des">
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="video_opt_sub_item_group_opt">
+                                <input type="radio" class="toomva_radio" name="choosesub" id="cs_2" value="english"> <span class="video_opt_sub_item_content_desc">
+                                    Tiếng Anh                                                     <span class="sub_keycode_des">
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="video_opt_sub_item_group_opt">
+                                <input type="radio" class="toomva_radio" name="choosesub" id="cs_3" value="vietnamese"> <span class="video_opt_sub_item_content_desc">
+                                    Tiếng Việt                                                     <span class="sub_keycode_des">
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="video_opt_sub_item_group_opt">
+                                <input type="radio" checked class="toomva_radio" name="choosesub" id="cs_4" value="both"> <span class="video_opt_sub_item_content_desc">
+                                    Hiển thị cả 2                                                     <span class="sub_keycode_des">
+                                    </span>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="botom-scroll-sub" style="width:100%;color:#fff;">
+                <span class="info-video-mobile tv previous-subline-mobile noselect">
+                    <a style="cursor:pointer" id="pre-video">
+                        &lt;&lt;
+                    </a>
+                </span> <span class="info-video-mobile tv next-subline-mobile noselect">
+                    <a style="cursor:pointer" id="next-video">
+                        &gt;&gt;
+                    </a>
+                </span>
+                <span class="info-video-mobile tv play-pause-moble noselect" id="playVideo">Play</span>
+                @* <span class="info-video-mobile tv speed-menu noselect">
+                Tốc độ
+                <div class="speed-list-yt">
+                <li class="title-menu">Speed</li>
+                <li class="speed-type" role="presentation">
+                <input id="speed-1" type="radio" name="radioName" value="2.0"> 2.0
+                </li>
+                <li class="speed-type" role="presentation">
+                <input id="speed-2" type="radio" name="radioName" value="1.5"> 1.5
+                </li>
+                <li class="speed-type" role="presentation"><input id="speed-3" type="radio" name="radioName" value="1.25"> 1.25</li>
+                <li class="speed-type" role="presentation">
+                <input id="speed-4" type="radio" name="radioName" value="1.0"> 1.0
+                </li>
+                <li class="speed-type" role="presentation">
+                <input id="speed-5" type="radio" name="radioName" value="0.75"> 0.75
+                </li>
+                <li class="speed-type" role="presentation">
+                <input id="speed-6" type="radio" name="radioName" value="0.5"> 0.5
+                </li>
+                <li class="speed-type" role="presentation"><input id="speed-7" type="radio" name="radioName" value="0.25"> 0.25</li>
+                </div>
+                </span>*@
+                <div class="mediamenu speed-menu ">
+                    <div style=" font-weight: 600; margin-bottom: .8em; border-bottom: 1px solid; text-align: center; ">
+                        <a id="toggleSpeed" style="cursor: pointer">
+                            Tốc độ
+
+                        </a>
+                    </div>
+
+                    <div class="speed-list-yt">
+                        <li class="title-menu">Tốc độ phát</li>
+                        <li class="speed-type" role="presentation">
+                            <input id="speed-1" type="radio" name="radioName" value="2.0"> 2.0
+                        </li>
+                        <li class="speed-type" role="presentation">
+                            <input id="speed-2" type="radio" name="radioName" value="1.5"> 1.5
+                        </li><li class="speed-type" role="presentation">
+                            <input id="speed-3" type="radio" name="radioName" value="1.25"> 1.25
+                        </li><li class="speed-type" role="presentation"><input id="speed-4" type="radio" name="radioName" value="1.0"> 1.0</li><li class="speed-type" role="presentation">
+                            <input id="speed-5" type="radio" name="radioName" value="0.75"> 0.75
+                        </li><li class="speed-type" role="presentation">
+                            <input id="speed-6" type="radio" name="radioName" value="0.5"> 0.5
+                        </li> <li class="speed-type" role="presentation">
+                            <input id="speed-7" type="radio" name="radioName" value="0.25"> 0.25
+                        </li>
+                    </div>
+                </div>
+            </div>
             <div class="mt-3 search-video-total">
                 @foreach (var itemMain in Model.VideoData)
                 {
-                   
+
                     <div class="d-flex flex-row mt-2" style="border-bottom: 1px solid #ccc">
                         <div class="search-video-img single">
                             <a href="/video/@itemMain.Slug?id=@itemMain.Id" class="video-for-list-related">
-                                <img src="@itemMain.Img" >
+                                <img src="@itemMain.Img">
                             </a>
                         </div>
                         <div class="">
@@ -270,180 +513,292 @@
                         </div>
                     </div>
                 }
-                
+
             </div>
+
         </div>
+
+
     </div>
-   
+
 
 </div>
 
 <script>
-    function speakWord(elementId, voiceName) {
-        const wordElement = document.getElementById(elementId);
-        const textToSpeak = wordElement.textContent;
-        const msg = new SpeechSynthesisUtterance(textToSpeak);
-
-        const voices = window.speechSynthesis.getVoices();
-
-        const maleVoice = voices.find(voice => voice.name === voiceName);
-
-        if (maleVoice) {
-            msg.voice = maleVoice;
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        
+        function toggleVideoLoop() {
+            var video = document.getElementById('video');
+            var checkbox = document.getElementById('AutoPrev');
+            video.loop = checkbox.checked;
         }
-        window.speechSynthesis.speak(msg);
-    }
+        $('.video_opt_item.copy-ensub').click(function () {
+            var copiedText = '';
 
-    const data = @Html.Raw(Json.Serialize(Model.VideoVMOj.listTimeLine));
-    const video = document.getElementById("video");
-    const subtitleContainer = document.querySelector("#cue-wrapper"); 
-
-    function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = Math.floor(seconds % 60);
-
-        const padZero = (number) => (number < 10 ? "0" : "") + number;
-
-        return (
-            padZero(hours) +
-            ":" +
-            padZero(minutes) +
-            ":" +
-            padZero(remainingSeconds)
-        );
-    }
-
-    function timeToSeconds(timeString) {
-        const timeParts = timeString.split(":");
-        if (timeParts.length === 3) {
-            const hours = parseInt(timeParts[0], 10);
-            const minutes = parseInt(timeParts[1], 10);
-            const seconds = parseInt(timeParts[2], 10);
-            if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
-                return hours * 3600 + minutes * 60 + seconds;
-            }
-        }
-        return 0;
-    }
-   
-    video.ontimeupdate = function () {
-        const currentTime = formatTime(video.currentTime);
-
-        subtitleContainer.innerHTML = ""; 
-
-        data.forEach((item) => {
-            if (item.timePoint === currentTime) {
-                const cueLine = document.createElement("span");
-                cueLine.classList.add("cue-line");
-                const cue = document.createElement("span");
-                cue.classList.add("cue");
-
-                item.english.split(" ").forEach((word) => {
-                    const wordSpan = document.createElement("span");
-                    wordSpan.classList.add("word");
-                    wordSpan.textContent = word + " ";
-                    cue.appendChild(wordSpan);
-                });
-
-                cueLine.appendChild(cue);
-
-                const vietnameseCue = document.createElement("span");
-                vietnameseCue.classList.add("cue-line");
-                vietnameseCue.innerHTML = `<span class="cue">${item.vietnamese}</span>`;
-
-                subtitleContainer.appendChild(cueLine);
-                subtitleContainer.appendChild(vietnameseCue);
-            }
-        });
-        const searchWords = document.querySelectorAll('.word');
-        const resultElement = document.getElementById('result');
-        let currentHoveredWord = '';
-
-        function searchWord(word) {
-            $('.loading').fadeIn();
-            fetch('http://localhost:3000/tudien')
-                .then(response => response.json())
-                .then(data => {
-                    $('.loading').fadeOut();
-
-                    const searchResult = data.find(item => item.word.trim() === word.trim());
-
-                    const meaningList = document.getElementById('meaning-list');
-
-                    if (searchResult) {
-                        meaningList.innerHTML = '';
-                        const listItem = document.createElement('li');
-                        listItem.textContent = searchResult.note;
-                        meaningList.appendChild(listItem);
-                    } else {
-                        meaningList.innerHTML = '';
-                        const notFoundItem = document.createElement('li');
-                        notFoundItem.textContent = 'Không tìm thấy từ: ' + word;
-                        meaningList.appendChild(notFoundItem);
-                    }
-                })
-                .catch(error => {
-                    console.error('Lỗi khi tải dữ liệu JSON:', error);
-                });
-        }
-
-        searchWords.forEach(wordElement => {
-            wordElement.addEventListener('mouseenter', () => {
-                const word = wordElement.textContent;
-                currentHoveredWord = word;
-                document.getElementById('word-main').textContent = word;
-                searchWord(word);
-                resultElement.style.visibility = 'visible';
+            $('#DataTable .sub_en').each(function () {
+                copiedText += $(this).text() + '\n';
             });
 
-            // Add a mouseleave event listener to the resultElement
-          
+            navigator.clipboard.writeText(copiedText).then(function () {
+                alert("Nội dung đã được sao chép");
+            });
         });
-        resultElement.addEventListener('mouseleave', () => {
-            resultElement.style.visibility = 'hidden';
+        $('.video_opt_item.copy-visub').click(function () {
+            var copiedText = '';
+
+            $('#DataTable .sub_vi').each(function () {
+                copiedText += $(this).text() + '\n';
+            });
+
+            navigator.clipboard.writeText(copiedText).then(function () {
+                alert("Nội dung đã được sao chép");
+            });
         });
 
-    };
-    function convertTimeToSeconds(time) {
-        const parts = time.split(':');
-        return (
-            parseInt(parts[0]) * 3600 + // Hours
-            parseInt(parts[1]) * 60 +   // Minutes
-            parseInt(parts[2])          // Seconds
-        );
-    }
-    const subContainer = document.querySelector('.scroll-sub');
-    const subLines = document.querySelectorAll(".sub-line");
-    video.addEventListener('timeupdate', () => {
-        const currentTime = video.currentTime;
+        var videoObtion = $('#video_obtion');
+        var dataTable = $('#DataTable');
+        var configVideo = $('#configVideo');
 
-        subLines.forEach(subLine => {
-            const dataTime = subLine.getAttribute('data-time');
-            const dataTimeInSeconds = convertTimeToSeconds(dataTime);
+        configVideo.hide();
 
-            if (Math.abs(dataTimeInSeconds - currentTime) < 0.5) {
-                subLine.style.backgroundColor = '#ccc';
-                subLine.style.opacity = '1.5';
-                subLine.style.fontWeight = '700';
-
-                // Scroll to the matched sub-line within the subtitle container
-                subContainer.scrollTo({
-                    top: subLine.offsetTop - subContainer.offsetTop,
-                    behavior: 'smooth'
-                });
+        videoObtion.click(function () {
+            if (configVideo.is(':hidden')) {
+                configVideo.show();
+                dataTable.hide();
+                videoObtion.text('Đóng');
             } else {
-                subLine.style.backgroundColor = 'initial';
-                subLine.style.opacity = 'initial';
-                subLine.style.fontWeight = 'initial';
+                configVideo.hide();
+                dataTable.show();
+                videoObtion.text('CHỨC NĂNG');
+            }
+        });
+        var toggleSpeed = $('#toggleSpeed');
+        // Tìm phần nội dung "Speed".
+        var speedList = $('.speed-list-yt');
+
+        speedList.hide();
+
+        toggleSpeed.click(function () {
+            speedList.slideToggle();
+        });
+        function speakWord(elementId, voiceName) {
+            const wordElement = document.getElementById(elementId);
+            const textToSpeak = wordElement.textContent;
+            const msg = new SpeechSynthesisUtterance(textToSpeak);
+
+            const voices = window.speechSynthesis.getVoices();
+
+            const maleVoice = voices.find(voice => voice.name === voiceName);
+
+            if (maleVoice) {
+                msg.voice = maleVoice;
+            }
+            window.speechSynthesis.speak(msg);
+        }
+
+        const data = @Html.Raw(Json.Serialize(Model.VideoVMOj.listTimeLine));
+        const video = document.getElementById("video");
+        const subtitleContainer = document.querySelector("#cue-wrapper");
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+
+            const padZero = (number) => (number < 10 ? "0" : "") + number;
+
+            return (
+                padZero(hours) +
+                ":" +
+                padZero(minutes) +
+                ":" +
+                padZero(remainingSeconds)
+            );
+        }
+
+        function timeToSeconds(timeString) {
+            const timeParts = timeString.split(":");
+            if (timeParts.length === 3) {
+                const hours = parseInt(timeParts[0], 10);
+                const minutes = parseInt(timeParts[1], 10);
+                const seconds = parseInt(timeParts[2], 10);
+                if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+                    return hours * 3600 + minutes * 60 + seconds;
+                }
+            }
+            return 0;
+        }
+        function toggleSubtitle(language) {
+            video.ontimeupdate = function () {
+                const currentTime = formatTime(video.currentTime);
+
+                subtitleContainer.innerHTML = "";
+
+                data.forEach((item) => {
+                    if (item.timePoint === currentTime) {
+                        const cueLine = document.createElement("span");
+                        cueLine.classList.add("cue-line");
+                        const cue = document.createElement("span");
+                        cue.classList.add("cue");
+
+                        if (language === 'english' || language === 'both') {
+                            item.english.split(" ").forEach((word) => {
+                                const wordSpan = document.createElement("span");
+                                wordSpan.classList.add("word");
+                                wordSpan.textContent = word + " ";
+                                cue.appendChild(wordSpan);
+                            });
+                        }
+
+                        cueLine.appendChild(cue);
+
+                        if (language === 'vietnamese' || language === 'both') {
+                            const vietnameseCue = document.createElement("span");
+                            vietnameseCue.classList.add("cue-line");
+                            vietnameseCue.innerHTML = `<span class="cue">${item.vietnamese}</span>`;
+                            cueLine.appendChild(vietnameseCue);
+                        }
+
+                        subtitleContainer.appendChild(cueLine);
+                    }
+                });
+                const searchWords = document.querySelectorAll('.word');
+                const resultElement = document.getElementById('result');
+                let currentHoveredWord = '';
+
+                function searchWord(word) {
+                    $('.loading').fadeIn();
+                    fetch('/tudien')
+                        .then(response => response.json())
+                        .then(data => {
+                            $('.loading').fadeOut();
+
+                            const searchResult = data.tudien.find(item => item.word.trim() === word.trim());
+
+                            const meaningList = document.getElementById('meaning-list');
+
+                            if (searchResult) {
+                                meaningList.innerHTML = '';
+                                const listItem = document.createElement('li');
+                                listItem.textContent = searchResult.note;
+                                meaningList.appendChild(listItem);
+                            } else {
+                                meaningList.innerHTML = '';
+                                const notFoundItem = document.createElement('li');
+                                notFoundItem.textContent = 'Không tìm thấy từ: ' + word;
+                                meaningList.appendChild(notFoundItem);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Lỗi khi tải dữ liệu JSON:', error);
+                        });
+                }
+
+                searchWords.forEach(wordElement => {
+                    wordElement.addEventListener('mouseenter', () => {
+                        const word = wordElement.textContent;
+                        currentHoveredWord = word;
+                        document.getElementById('word-main').textContent = word;
+                        searchWord(word);
+                        resultElement.style.visibility = 'visible';
+                    });
+
+
+                });
+                resultElement.addEventListener('mouseleave', () => {
+                    resultElement.style.visibility = 'hidden';
+                });
+
+            };
+        }
+        $('input[type="radio"]').change(function () {
+            if ($(this).is(":checked")) {
+                var selectedValue = $(this).val(); 
+                toggleSubtitle(selectedValue); 
+            }
+        });
+
+      
+        var defaultCheckedRadio = $('input[type="radio"]:checked');
+        var defaultValue = defaultCheckedRadio.val();
+
+        toggleSubtitle(defaultValue);
+        function convertTimeToSeconds(time) {
+            const parts = time.split(':');
+            return (
+                parseInt(parts[0]) * 3600 +
+                parseInt(parts[1]) * 60 +
+                parseInt(parts[2])
+            );
+        }
+        const subContainer = document.querySelector('.scroll-sub');
+        const subLines = document.querySelectorAll(".sub-line");
+        video.addEventListener('timeupdate', () => {
+            const currentTime = video.currentTime;
+
+            subLines.forEach(subLine => {
+                const dataTime = subLine.getAttribute('data-time');
+                const dataTimeInSeconds = convertTimeToSeconds(dataTime);
+
+                if (Math.abs(dataTimeInSeconds - currentTime) < 0.5) {
+                    subLine.style.backgroundColor = '#ccc';
+                    subLine.style.opacity = '1.5';
+                    subLine.style.fontWeight = '700';
+
+                    subContainer.scrollTo({
+                        top: subLine.offsetTop - subContainer.offsetTop,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    subLine.style.backgroundColor = 'initial';
+                    subLine.style.opacity = 'initial';
+                    subLine.style.fontWeight = 'initial';
+                }
+            });
+        });
+        subLines.forEach((subLine) => {
+            subLine.addEventListener("click", () => {
+                const time = subLine.dataset.time;
+                video.currentTime = timeToSeconds(time);
+            });
+        });
+        let currentIndex = 0;
+
+
+        // Lùi về
+        document.querySelector(".previous-subline-mobile").addEventListener("click", function () {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSubline();
+            }
+        });
+
+        // Tăng lên
+        document.querySelector(".next-subline-mobile").addEventListener("click", function () {
+
+            if (currentIndex < subLines.length - 1) {
+                currentIndex++;
+                updateSubline();
+            }
+        });
+
+        function updateSubline() {
+            const subLine = subLines[currentIndex];
+            const time = subLine.dataset.time;
+
+            video.currentTime = timeToSeconds(time);
+        }
+        const playPauseButton = document.getElementById("playVideo");
+
+        playPauseButton.addEventListener("click", function () {
+            if (video.paused) {
+                video.play();
+                playPauseButton.textContent = "Pause";
+            } else {
+                video.pause();
+                playPauseButton.textContent = "Play"; 
             }
         });
     });
-    subLines.forEach((subLine) => {
-        subLine.addEventListener("click", () => {
-            const time = subLine.dataset.time;
-            video.currentTime = timeToSeconds(time);
-        });
-    });
-  
 </script>

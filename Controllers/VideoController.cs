@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 using Tommava.Data;
 using Tommava.Models.CombinedViewModel;
+using Tommava.Models.Page;
 using Tommava.Models.TimeLineVideoVM;
 using Tommava.Models.videoVM;
 
@@ -18,7 +23,22 @@ namespace Tommava.Controllers
 
 
         }
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("tudien")]
 
+        public IActionResult GetOutputJson()
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "output.json");
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var json = System.IO.File.ReadAllText(filePath);
+                return Content(json, "application/json");
+            }
+
+            return NotFound();
+        }
         [Route("video/{slug}")]
         public async Task <IActionResult> Index(string slug, int id)
         {
@@ -80,5 +100,86 @@ namespace Tommava.Controllers
             }
 
         }
+
+
+        [Route("danh-muc/{slug}")]
+        public async Task<IActionResult> Category(string slug,int page = 1, int pageSize = 20, string filter = "news")
+        {
+            ViewBag.Slug = slug;
+            ViewBag.filter = filter;
+
+            var latestCategoryId = await _context.Category
+                .Where(c => c.Slug == slug)
+                .OrderByDescending(c => c.CreatedDate)
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
+
+            IQueryable<VideoVM> queryToFilter = from i in _context.Video
+                                                where i.IsDeleted == false && i.CategoryId == latestCategoryId
+                                                select new VideoVM
+                                                {
+                                                    Id = i.Id,
+                                                    Name = i.Name,
+                                                    Description = i.Description,
+                                                    NameVn = i.NameVn,
+                                                    Img = i.Img,
+                                                    Slug = i.Slug,
+                                                    VideoLink = i.VideoLink,
+                                                    CategoryId = i.CategoryId,
+                                                    CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
+                                                    GenreId = i.GenreId,
+                                                    GenreName = _context.Genre.FirstOrDefault(c => c.Id == i.GenreId)!.Name ?? "",
+                                                    IsDeleted = i.IsDeleted,
+                                                    IsActive = i.IsActive,
+                                                    IsHome = i.IsHome,
+                                                    ViewCount = i.ViewCount,
+                                                    CreatedDate = i.CreatedDate,
+                                                };
+
+            IQueryable<VideoVM> query = null;
+
+            switch (filter)
+            {
+                case "views":
+                    query = queryToFilter.OrderByDescending(x => x.ViewCount);
+                    break;
+                case "hot":
+                    // Thêm logic lọc theo tiêu chí "Được đề xuất"
+                    query = queryToFilter.OrderByDescending(x => x.ViewCount);
+                    break;
+                case "news":
+                default:
+                    query = queryToFilter.OrderByDescending(x => x.CreatedDate);
+                    break;
+            }
+
+
+            var totalVideos = await query.CountAsync();
+            var videos = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var categoryName = _context.Category.FirstOrDefault(c => c.Id == latestCategoryId)?.Name;
+            ViewBag.Category = categoryName ?? "Default Category Name";
+            ViewBag.IdCategory = latestCategoryId;
+
+            var combinedViewModel = new CombinedViewModel
+            {
+                VideoData = videos,
+                VideoPage = new PagedResults<VideoVM>
+                {
+                    Items = videos,
+                    PageNumber = page,
+                    PageSize = pageSize,
+                    TotalItems = totalVideos
+                }
+            };
+
+            return View(combinedViewModel);
+
+
+        }
+       
     }
 }

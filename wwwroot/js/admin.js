@@ -7,7 +7,6 @@
                 paging: false,
                 select: true,
                 autoFill: true,
-                "order": [[0, "desc"]],
                 dom: 'Bfrtip',
                 'columnDefs': [{
                     'targets': [-1],
@@ -261,7 +260,7 @@
 
 }
 window.addEventListener('load', function () {
-
+    console.log('Trang web đã tải xong.');
     this.setTimeout(() => {
         dataTableJS()
     }, 1500)

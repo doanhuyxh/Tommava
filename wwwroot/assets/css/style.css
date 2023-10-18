@@ -92,7 +92,10 @@ header {
     top: 50%;
     transform: translateY(-50%);
 }
-
+#menu_home {
+    overflow-y: auto;
+    max-height: 800px;
+}
 main {
     padding: 70px 2rem;
 }
@@ -538,8 +541,6 @@ span.info-video-mobile {
     width: 25%;
     height: 100%;
     display: block;
-    padding-top: 0.3em;
-    padding-bottom: 0.5em;
 }
 span.info-video-mobile, span.title-scroll {
     float: left;
@@ -549,7 +550,6 @@ span.info-video-mobile, span.title-scroll {
     cursor: pointer;
 }
 div.mediamenu {
-    bottom: 3.85em;
 }
 span#video_obtion {
     display: block;
@@ -560,121 +560,163 @@ span#video_obtion {
     font-weight: 600;
     cursor: pointer;
 }
-@media (min-width: 1260px) {
-    nav.menu-home {
-        display: block;
-        width: 20%;
-        margin-left: 2%;
-        top: 58px;
+.tt-selectable:hover, .video_opt_item:hover, .video_opt_sub_item_group_opt:hover, a.list-group-item.typeahead:hover {
+    background: bisque;
+}
+    @media (min-width: 1260px) {
+        nav.menu-home {
+            display: block;
+            width: 20%;
+            margin-left: 2%;
+            top: 58px;
+            height: fit-content;
+        }
+
+        button#c-button--slide-left.c-button.home {
+            margin-left: 1.6em;
+        }
+
+        .col-md-12.content-home {
+            max-width: 75%;
+            padding: 0;
+        }
+
+        .search-video-img.single {
+            width: 160px;
+            height: 90px;
+        }
     }
-    button#c-button--slide-left.c-button.home {
-        margin-left: 1.6em;
+
+    @media (min-width: 600px) {
+        h4.search-title-e {
+            font-weight: 500;
+            color: #333;
+            text-align: left;
+            margin: auto;
+        }
+
+        h5.search-title-v {
+            display: block;
+            font-weight: 500;
+            font-size: 16px;
+            margin: 6px 0;
+            text-align: left;
+            color: #777;
+        }
+
+        div.botom-scroll-sub-top {
+        }
     }
-    .col-md-12.content-home {
-        max-width: 75%;
+
+    @media (min-width: 1024px) {
+        span.flag.single > img {
+            padding-left: 0.3em;
+            margin-top: -0.8em;
+            width: 22px;
+        }
+
+        li.c-menu__item {
+            font-size: 15px;
+        }
+
+        span.flag.single {
+            height: 15px;
+            display: inline-table;
+            top: 0.45em;
+        }
+
+        span.search-views.single {
+            float: left;
+            clear: left;
+        }
+
+        .search-view-time.single {
+            display: inherit;
+            position: relative;
+        }
+
+        h4.search-title-e.single {
+            margin-top: 0;
+        }
+
+        .search-video-content.single {
+            width: auto;
+            margin: 0 1%;
+        }
+
+        button#c-button--slide-left {
+            margin-left: 1.2em;
+        }
+
+        .c-menu__close::after {
+            content: "HOME";
+        }
+
+        .search-video-img.single {
+            position: relative;
+            width: 120px;
+            height: 67.5px;
+            margin-right: 5px;
+        }
+
+        button.c-menu__close {
+            width: 100%;
+            color: #fff;
+            font-weight: 500;
+            border-radius: 0;
+        }
+    }
+
+    @media only screen and (max-width: 48em) {
+
+        nav.menu-home {
+            width: 100%;
+            overflow-y: auto;
+            max-height: 800px;
+            top: 80px !important;
+        }
+
+        main {
+            display: none;
+        }
+
+        .c-button.home {
+            display: none;
+        }
+    }
+
+    @media only screen and (min-width: 47em) and (max-width: 1200px) {
+    }
+
+    .loading {
+        list-style-type: none;
+        margin: 0;
         padding: 0;
     }
-    .search-video-img.single {
-        width: 160px;
-        height: 90px;
-    }
-}
-@media (min-width: 600px) {
-    h4.search-title-e {
-        font-weight: 500;
-        color: #333;
-        text-align: left;
-        margin: auto;
-    }
-    h5.search-title-v {
-        display: block;
-        font-weight: 500;
-        font-size: 16px;
-        margin: 6px 0;
-        text-align: left;
-        color: #777;
-    }
-    div.botom-scroll-sub-top {
-    }
-} 
-@media (min-width: 1024px) {
-    span.flag.single > img {
-        padding-left: 0.3em;
-        margin-top: -0.8em;
-        width: 22px;
-    }
-    li.c-menu__item {
-        font-size: 15px;
-    }
-    span.flag.single {
-        height: 15px;
-        display: inline-table;
-        top: 0.45em;
-    }
-    span.search-views.single {
-        float: left;
-        clear: left;
-    }
-    .search-view-time.single {
-        display: inherit;
-        position: relative;
-    }
-    h4.search-title-e.single {
-        margin-top: 0;
-    }
-    .search-video-content.single {
-        width: auto;
-        margin: 0 1%;
-    }
-    button#c-button--slide-left {
-        margin-left: 1.2em;
-    }
-    .c-menu__close::after {
-        content: "HOME";
-    }
-    .search-video-img.single {
-        position: relative;
-        width: 120px;
-        height: 67.5px;
-        margin-right: 5px;
-    }
-    button.c-menu__close {
-        width: 100%;
-        color: #fff;
-        font-weight: 500;
-        border-radius: 0;
-    }
-}
 
-.loading {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
+        .loading::before {
+            content: "";
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #007BFF;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
 
-    .loading::before {
-        content: "";
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        border-top: 4px solid #007BFF;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: spin 1s linear infinite;
-        display: inline-block;
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
+    .search-video-total {
+        background: #fff;
+        padding: 5px 2px;
+        border: 1px solid #e7e7e7;
     }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.search-video-total {
-    background: #fff;
-    padding: 5px 2px;
-    border: 1px solid #e7e7e7;
-}

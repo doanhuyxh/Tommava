@@ -6,7 +6,7 @@ namespace Tommava.Models.videoVM
     public class VideoVM
     {
         public int Id { get; set; }
-        [Display(Name = "Tên video")]
+        [Display(Name = "Tên tiếng anh")]
         public string Name { get; set; }
         [Display(Name = "Chi tiết video")]
         public string Description { get; set; }
@@ -27,9 +27,10 @@ namespace Tommava.Models.videoVM
         [Display(Name = "Ảnh đại diện")]
         public IFormFile? ImgFile { get; set; }
 
-        public List<VideoVM> listDataVideo { get; set; }
+        public List<VideoVM>? listDataVideo { get; set; }
 
-        public List<Category> listCate { get; set; }
+        public List<Category>? listCate { get; set; }
+
         public List<TimeLineVideoVM.TimeLineVideoVM> listTimeLine { get; set; }
 
 

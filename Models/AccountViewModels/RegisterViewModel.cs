@@ -28,7 +28,10 @@ namespace Tommava.Models.AccountViewModels
             return new ApplicationUser
             {
                 UserName = vm.UserName,
-                IsActive = true,
+                FullName = vm.FullName,
+                Email = vm.Email,
+                Avatar = "/upload/avatar/blank_avatar.png",
+				IsActive = true,
             };
         }
     }
