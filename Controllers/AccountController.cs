@@ -37,9 +37,11 @@ namespace Tommava.Controllers
         }
 
         [HttpGet]
+        [Route("Login")]
         public IActionResult Login() { return View(); }
 
         [HttpGet]
+        [Route("Register")]
         public IActionResult Register() { return View(); }
 
         [HttpPost]
@@ -126,9 +128,8 @@ namespace Tommava.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                ApplicationUser user = model;
+            
+                ApplicationUser user = model;                
                 var result = await _userManager.CreateAsync(user, model.PasswordHash);
 
                 if (result.Succeeded)
@@ -144,7 +145,7 @@ namespace Tommava.Controllers
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-            }
+            
             return View(model);
         }
 
