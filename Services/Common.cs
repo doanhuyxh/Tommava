@@ -76,6 +76,26 @@ namespace Tommava.Services
             return $"/upload/ImgVideo/{path}";
         }
 
+        public async Task<string> UploadChunkVideoAsync(IFormFile file)
+        {
+            string path = string.Empty;
+
+            if (file != null)
+            {
+                string uploadsFolder = Path.Combine(_iHostingEnvironment.ContentRootPath, "wwwroot/upload/chunkVideo");
+
+                if (file.FileName == null)
+                    path = "video.png";
+                else
+                    path = DateTime.Now.Ticks.ToString() + ".png";
+                string filePath = Path.Combine(uploadsFolder, path);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            return $"/upload/chunkVideo/{path}";
+        }
     }
 }
 

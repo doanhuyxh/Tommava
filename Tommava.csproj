@@ -36,6 +36,7 @@
 	  <Folder Include="wwwroot\upload\avatar\" />
 	  <Folder Include="wwwroot\upload\img\" />
 	  <Folder Include="wwwroot\upload\ImgVideo\" />
+	  <Folder Include="wwwroot\upload\chunkVideo\" />
 	  <Folder Include="wwwroot\upload\Video\" />
 	</ItemGroup>
 </Project>

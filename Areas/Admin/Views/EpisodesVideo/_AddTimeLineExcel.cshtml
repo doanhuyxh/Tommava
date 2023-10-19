@@ -78,17 +78,19 @@
         },
         watch: {
             data(newVal) {
-                setTimeout(() => {
-                    $("#tableAD").DataTable({
-                        paging: true,
-                        searching: false,
-                        ordering: false,
-                        info: false,
-                        lengthChange: false,
-                        processing: true,
-                        pageLength: 10,
-                    })
-                }, 1500)
+                //setTimeout(() => {
+                //     $("#tableAD").DataTable({
+                //         paging: true,
+                //         searching: false,
+                //         ordering: false,
+                //         info: false,
+                //         lengthChange: false,
+                //         processing: true,
+                //         pageLength: 10,
+                //         bDeferRender:true,
+                //         fnDrawCallback:true
+                //     })
+                // }, 1500)
             },
         },
         methods: {
@@ -138,6 +140,7 @@
             },
             HandleCusData(e) {
                 let currentThis = this;
+                this.data = [];
                 let data = e.target.value;
                 if (data == "") {
                     this.data = [];

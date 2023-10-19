@@ -80,6 +80,8 @@ namespace Tommava.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
+        [AllowAnonymous]
         public async Task<IActionResult> SaveData(EpisodesVideoVM vm)
         {
             JsonResultVM json = new JsonResultVM();
@@ -286,6 +288,72 @@ namespace Tommava.Areas.Admin.Controllers
                 return BadRequest(json);
             }
         }
+        private const string UploadDirectory = "wwwroot/upload/chunkVideo";
+        [HttpPost]
+        [AllowAnonymous]
+        [DisableRequestSizeLimit]
+        public IActionResult UploadVideoChunk([FromForm] IFormFile chunk, int totalChunks, int chunkIndex, string fileName)
+        {
+            try
+            {
+                // Đảm bảo thư mục lưu trữ phần nhỏ đã được tạo
+                string uploadPath = Path.Combine(UploadDirectory, fileName);
+                string chunkPath = Path.Combine(uploadPath, chunkIndex.ToString());
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                // Lưu trữ phần nhỏ của tệp video
+                using (var stream = new FileStream(chunkPath, FileMode.Create))
+                {
+                    chunk.CopyTo(stream);
+                }
+
+                // Kiểm tra xem đã nhận đủ số lượng phần nhỏ để ghép tệp chưa
+                if (IsAllChunksReceived(uploadPath, totalChunks))
+                {
+                    MergeChunks(uploadPath, fileName, totalChunks);
+
+                    // Trả về đường dẫn của tệp video gốc sau khi ghép thành công
+                    string finalFilePath = Path.Combine(UploadDirectory, fileName);
+                    return Ok(new { FilePath = finalFilePath });
+                }
+
+                return Ok("Phần nhỏ đã được nhận.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi khi tải lên: " + ex.Message);
+            }
+        }
+
+        private bool IsAllChunksReceived(string uploadPath, int totalChunks)
+        {
+            string[] chunkFiles = Directory.GetFiles(uploadPath);
+            return chunkFiles.Length == totalChunks;
+        }
+
+        private void MergeChunks(string uploadPath, string fileName, int totalChunks)
+        {
+            string finalFilePath = Path.Combine(UploadDirectory, fileName);
+            using (var finalStream = new FileStream(finalFilePath, FileMode.Create))
+            {
+                for (int i = 0; i < totalChunks; i++)
+                {
+                    string chunkPath = Path.Combine(uploadPath, i.ToString());
+                    using (var chunkStream = new FileStream(chunkPath, FileMode.Open))
+                    {
+                        chunkStream.CopyTo(finalStream);
+                    }
+                }
+            }
+
+            // Xóa các phần nhỏ sau khi đã ghép tệp gốc thành công
+            Directory.Delete(uploadPath, true);
+        }
     }
+
 }
 

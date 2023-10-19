@@ -279,12 +279,12 @@
         _data.append("TitleVN", $("#TitleVN").val())
         _data.append("TitleEN", $("#TitleEN").val())
         _data.append("VideoId", $("#VideoId").val())
-        _data.append("VideoId", $("#VideoId").val())
         _data.append("EpisodeNumber", $("#EpisodeNumber").val())
         _data.append("ImgFile", document.getElementById("ImgFile").files[0])
         _data.append("VideoFile", document.getElementById("VideoFile").files[0])
         _data.append("Description", $("#Description").val())
 
+        $('#preloader').fadeIn();
         fetch("/Admin/EpisodesVideo/SaveData", {
             method: "POST",
             headers: {
@@ -295,6 +295,8 @@
         })
             .then(res => res.json())
             .then(res => {
+
+                $('#preloader').fadeOut();
                 $('#staticBigModel').modal('hide');
                 console.log(res)
                 Swal.fire({
@@ -318,7 +320,7 @@
             cancelButtonText: "Hủy",
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`/Admin/Video/DeleteTimeLine?id=${videoid}`, {
+                fetch(`/Admin/EpisodesVideo/DeleteTimeLine?id=${videoid}`, {
                     method: "DELETE"
                 })
                     .then(res => res.json())
