@@ -14,8 +14,7 @@
                         <th class="text-center text-nowrap">Tên tiếng việt</th>
                         <th class="text-center text-nowrap">Slug</th>
                         <th class="text-center text-nowrap">Ảnh đại diện</th>
-                        <th class="text-center text-nowrap">Video</th>
-                        <th class="text-center text-nowrap">TimeLine</th>
+                        <th class="text-center text-nowrap">Mô tả ngắn</th>
                         <th class="text-center text-nowrap">Thể loại</th>
                         <th class="text-center text-nowrap">Danh mục</th>
                         <th class="text-center text-nowrap"></th>
@@ -27,8 +26,7 @@
                     <th class="text-center text-wrap">{{item.nameVn}}</th>
                     <th class="text-center text-wrap">{{item.slug}}</th>
                     <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewImg(item.img)"><i class="fa-solid fa-image" style="color: #1f5129;"></i></span></th>
-                    <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewVideo(item.videoLink)"><i class="fa-solid fa-photo-film" style="color: #1f5129;"></i></span></th>
-                    <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewTimeLine(item.id)"><i class="fa-solid fa-timeline" style="color: #e62828;"></i></span></th>
+                    <th class="text-center text-wrap">{{item.shortDescription}}</th>
                     <th class="text-center text-wrap">{{item.genreName}}</th>
                     <th class="text-center text-wrap">{{item.categoryName}}</th>
                     <td class="text-center text-nowrap">
@@ -42,64 +40,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="ModalTimeLine" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Timeline video</h5>
-                    <div>
-                        <button type="button" class="btn btn-success" v-on:click="AddTimeLine">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                        <button type="button" class="btn btn-success" v-on:click="AddTimeLineExcel">
-                            <i class="fa-regular fa-file-excel" style="color: #0e620f;"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-body" id="ModalTimeLineContent">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="ModalAddTimeLine" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalAddTimeLineTitle">TimeLine</h5>
-                </div>
-                <div class="modal-body" id="ModalAddTimeLineContent">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" v-on:click="SaveTimeLine()">Lưu</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="ModalAddTimeLineExcel" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalAddTimeLineTitleExcel">TimeLine</h5>
-                    <button type="button" class="btn btn-success" v-on:click="DonwloadExcel">
-                        <i class="fa-solid fa-download" style="color: #30453c;"></i>
-                    </button>
-                </div>
-                <div class="modal-body" id="ModalAddTimeLineContentExcel">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" v-on:click="SaveTimeLineExcel()">Lưu</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
 
 </div>
 <script>
@@ -108,7 +49,8 @@
         el: "#AppVueVideo",
         data: {
             data: [],
-            currentVideoId: 0
+            currentVideoId: 0,
+            ckName : "",
         },
         computed: {
 
@@ -120,7 +62,7 @@
             initData() {
                 fetch("/Admin/Video/GetData")
                     .then(res => res.json())
-                    .then(data => {                        
+                    .then(data => {
                         this.data = data.object;
                     })
             },
@@ -182,93 +124,6 @@
                     imageWidth: 1000,
                 })
             },
-            ViewTimeLine(videoId) {
-                if (videoId != undefined) {
-                this.currentVideoId = videoId;
-                }
-                $("#ModalTimeLineContent").load(`/Admin/Video/TimeLine?videoid=${this.currentVideoId}`, function () {
-
-                    $("#ModalTimeLineTitle").html("Time line video");
-                    $("#ModalTimeLine").modal("show");
-                })
-            },
-            AddTimeLine() {
-                $("#ModalAddTimeLineContent").load(`/Admin/Video/AddTimeLine`, function () {
-                    $("#ModalAddTimeLineTitle").html("Thêm mới");
-                    $("#ModalAddTimeLine").modal("show");
-                })
-            },
-            AddTimeLineExcel() {
-                $("#ModalAddTimeLineContentExcel").load(`/Admin/Video/AddTimeLineExcel`, function () {
-                    $("#ModalAddTimeLineTitleExcel").html("Thêm mới");
-                    $("#ModalAddTimeLineExcel").modal("show");
-                })
-            },
-            SaveTimeLine() {
-                let _timeline = new FormData();
-                _timeline.append("Id", $("#Id").val())
-                _timeline.append("CreatedDate", $("#CreatedDate").val())
-                _timeline.append("TimePoint", $("#TimePoint").val())
-                _timeline.append("Vietnamese", $("#Vietnamese").val())
-                _timeline.append("English", $("#English").val())
-                _timeline.append("VideoId", this.currentVideoId)
-                _timeline.append("IsDeleted", false)
-
-                fetch("/Admin/Video/SaveTimeLine", {
-                    method: "POST",
-                    headers: {
-                        processData: false,
-                        contentType: false,
-                    },
-                    body: _timeline
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        $('#ModalAddTimeLine').modal('hide');
-                        console.log(res)
-                        Swal.fire({
-                            title: "Thành công",
-                            icon: 'info',
-                        }).then(res => {
-                            this.ViewTimeLine(this.currentVideoId);
-                        });
-                    })
-            },
-            SaveTimeLineExcel() {
-                let _data = new FormData();
-                $('#preloader').fadeIn();
-                for (let i = 0; i < TimeLineExcel.$data.data.length; i++) {
-                    _data.append(`vm[${i}][Id]`, 0)
-                    _data.append(`vm[${i}][TimePoint]`, TimeLineExcel.$data.data[i].Time)
-                    _data.append(`vm[${i}][Vietnamese]`, TimeLineExcel.$data.data[i].SubVN)
-                    _data.append(`vm[${i}][English]`, TimeLineExcel.$data.data[i].SubEN)
-                    _data.append(`vm[${i}][VideoId]`, this.currentVideoId)
-                }
-
-                fetch("/Admin/Video/SaveTimeLineRange", {
-                    method: "POST",
-                    headers: {
-                        processData: false,
-                        contentType: false,
-                    },
-                    body: _data
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        $('#preloader').fadeOut();
-                        $("#ModalAddTimeLineExcel").modal("hide");
-                    })
-            },
-            DonwloadExcel() {
-                const fileUrl = '/upload/excel/Book1.xlsx';
-                const link = $('<a>', {
-                    href: fileUrl,
-                    download: 'Example.xlsx'
-                }).appendTo('body');
-                link[0].click();
-                link.remove();
-
-            }
         }
     })
 
@@ -279,7 +134,7 @@
         _data.append("ViewCount", $("#ViewCount").val())
         _data.append("CreatedDate", $("#CreatedDate").val())
         _data.append("Img", $("#Img").val())
-        _data.append("VideoLink", $("#VideoLink").val())
+        _data.append("ShortDescription", $("#ShortDescription").val())
         _data.append("IsActive", $("#IsActive").val())
         _data.append("IsHome", $("#IsHome").val())
         _data.append("Name", $("#Name").val())
@@ -289,7 +144,6 @@
         _data.append("Slug", $("#Slug").val())
         _data.append("GenreId", $("#GenreId").val())
         _data.append("ImgFile", document.getElementById("ImgFile").files[0])
-        _data.append("VideoFile", document.getElementById("VideoFile").files[0])
 
         fetch("/Admin/Video/AddEditVideo", {
             method: "POST",

@@ -11,7 +11,7 @@ namespace Tommava.Models
         public string Slug { get; set; }
         public string Description { get; set; }
         public string Img { get; set; } = string.Empty;
-        public string VideoLink { get; set; } = string.Empty;
+        public string ShortDescription { get; set; }
         public int GenreId { get; set; }
         public int CategoryId { get; set; }
         public int? SubCategoryId { get; set; } = 0;

@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
+}
+@model Tommava.Models.CombinedViewModel.CombinedViewModel
+<div class="row container-fluid content-home">
+    <div class="col-12 col-md-12 col-xl-12 bg-white">
+        <div class="top-link-parent-ct post">
+            <a href="/kien-thuc-kinh-nghiem"><span class="btn parent-cate">KIẾN THỨC</span></a>
+            <a href="/post/Hoi-dap=53"><span class="btn parent-cate">HỎI ĐÁP</span></a>
+        </div>
+
+
+
+        <div class="content-video">
+
+            <h3 class="h3-home text-start"><a href="https://toomva.com/recommended">@ViewBag.Category</a></h3>
+            <div class="sort-by-category text-end" style="margin-top:8px;">
+                <strong>
+                    <span class="cat-short-by-title" style="color:crimson;">LỌC THEO: </span>
+                    <select style="color:#0C8140;" onchange="location = this.value;">
+                        <option value="">Chọn lọc</option>
+                        <option value="?filter=views">Xem nhiều</option>
+                        <option value="?filter=news">Mới đăng</option>
+                        <option value="?filter=hot">Được đề xuất</option>
+                    </select>
+                </strong>
+            </div>
+            <div class="row p-lg-2">
+                @foreach (var item in Model.VideoPage.Items)
+                {
+                    <div class="col-6 col-md-3 col-xl-3 mb-4">
+                        <a href="/video/@item.Slug?id=@item.Id">
+                            <div class="card" style="width: 18rem;">
+                                <img src="@item.Img"
+                                     class="card-img-top" alt="..." style="width: 100%;height: 214px;object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title mt-3 title-video">@item.Name</h5>
+                                    <p class="card-text eng-title">
+                                        @item.NameVn
+                                    </p>
+                                    <div class="card-text d-flex justify-content-between sub-eng">
+                                        <div>
+                                            @item.ViewCount lượt xem
+                                        </div>
+                                        <div>
+                                            @item.CategoryName
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+
+
+        <hr>
+        <nav aria-label="Page navigation" class="d-flex justify-content-center">
+            <ul class="pagination">
+
+
+                @for (int i = 1; i <= Model.VideoPage.TotalPages; i++)
+                {
+                    if (i == 1 || i == Model.VideoPage.TotalPages || (i >= Model.VideoPage.PageNumber - 1 && i <= Model.VideoPage.PageNumber + 1))
+                    {
+                        <li class="page-item @(i == Model.VideoPage.PageNumber ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, filter = ViewBag.filter })">@i</a>
+                        </li>
+                    }
+                    else if (i == Model.VideoPage.PageNumber - 2 || i == Model.VideoPage.PageNumber + 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+                }
+
+
+            </ul>
+        </nav>
+
+        <footer class="footer-home d-flex justify-content-center">
+            <div class="footer-1">
+                <a href="/">
+                    <img _ngcontent-teq-97="" class="logo"
+                         src="/assets/Img/logo-toomva.png" alt="Toomva">
+                </a> <a _ngcontent-teq-97=""
+                        class="link" href="/">Home</a> <a _ngcontent-teq-97="" class="link" href="/about">About</a>
+            </div>
+            <div class="footer-2 d-flex">
+                <span class="footer-2-lien-he">Liên hệ hỗ trợ:</span>
+                <span class="hotline m-r-20"> <i class="fa fa-phone"></i> 081.365.8688 </span>
+                <span class="email">
+                    <i class="fa fa-envelope"></i> info@toomva.com
+                </span>
+            </div>
+
+        </footer>
+    </div>
+</div>

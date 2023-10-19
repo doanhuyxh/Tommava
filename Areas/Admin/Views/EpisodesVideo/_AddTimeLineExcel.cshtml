@@ -1,0 +1,162 @@
+﻿<div id="TimeLineExcel">
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Nhập excel</label>
+        <input class="form-control" type="file" id="FileExcel" v-on:change="HandleExcel">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Nhập CSV</label>
+        <input class="form-control" type="file" id="FileCSV" v-on:change="HandleCsv">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Tự nhập </label>
+        <textarea id="CustomData" rows="5" class="form-control" v-on:input="HandleCusData($event)"></textarea>
+    </div>
+    <p class="text text-center">Danh sách Time line</p>
+    <table class="table" id="tableAD">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Thời gian</th>
+                <th scope="col">Sub tiếng việt</th>
+                <th scope="col">Sub tiếng anh</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(item, index) in data" :key="index">
+                <th scope="row">{{index+1}}</th>
+                <td>{{item.Time}}</td>
+                <td>{{item.SubVN}}</td>
+                <td>{{item.SubEN}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+    var TimeLineExcel = new Vue({
+        el: "#TimeLineExcel",
+        data: {
+            data: [],
+            title: "ádadkhaslkdajsdjasldkj",
+            currentVideoId: 0,
+            config: {
+                delimiter: "",	// auto-detect
+                newline: "",	// auto-detect
+                quoteChar: '"',
+                escapeChar: '"',
+                header: false,
+                transformHeader: undefined,
+                dynamicTyping: false,
+                preview: 0,
+                encoding: "",
+                worker: false,
+                comments: false,
+                step: undefined,
+                complete: undefined,
+                error: undefined,
+                download: false,
+                downloadRequestHeaders: undefined,
+                downloadRequestBody: undefined,
+                skipEmptyLines: false,
+                chunk: undefined,
+                chunkSize: undefined,
+                fastMode: undefined,
+                beforeFirstChunk: undefined,
+                withCredentials: undefined,
+                transform: undefined,
+                delimitersToGuess: [',', '\t', '|', ';'],
+                skipFirstNLines: 0
+            }
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.currentVideoId = AppVueVideo.$data.currentVideoId
+        },
+        watch: {
+            data(newVal) {
+                setTimeout(() => {
+                    $("#tableAD").DataTable({
+                        paging: true,
+                        searching: false,
+                        ordering: false,
+                        info: false,
+                        lengthChange: false,
+                        processing: true,
+                        pageLength: 10,
+                    })
+                }, 1500)
+            },
+        },
+        methods: {
+            HandleExcel() {
+                let input = document.getElementById("FileExcel");
+                const file = input.files[0];
+                const reader = new FileReader();
+                let currentThis = this;
+                reader.onload = (event) => {
+                    let data = event.target.result;
+                    let workbook = XLSX.read(data, { type: 'binary' });
+                    let sheetName = workbook.SheetNames[0];
+                    let worksheet = workbook.Sheets[sheetName];
+                    let jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    console.log("jsonData", jsonData);
+                    for (let i = 0; i < jsonData.length; i++) {
+                        currentThis.data.push(jsonData[i])
+                    }
+
+                }
+                reader.readAsBinaryString(file);
+            },
+            HandleCsv() {
+                let currentThis = this;
+                Papa.parse(document.getElementById("FileCSV").files[0], {
+                    ...this.config,
+                    complete: function (results) {
+                        for (let i = 0; i < results.data.length; i++) {
+                            currentThis.data.push({
+                                SubEN: results.data[i][0],
+                                SubVN: results.data[i][1],
+                                Time: currentThis.ConverSencondToHourt(parseFloat(results.data[i][2]))
+                            });
+                        }
+                    }
+                })
+            },
+            ConverSencondToHourt(seconds) {
+                let hours = Math.floor(seconds / 3600);
+                let minutes = Math.floor((seconds % 3600) / 60);
+                let remainingSeconds = Math.floor(seconds % 60);
+                let formattedHours = String(hours).padStart(2, '0');
+                let formattedMinutes = String(minutes).padStart(2, '0');
+                let formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+                return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+            },
+            HandleCusData(e) {
+                let currentThis = this;
+                let data = e.target.value;
+                if (data == "") {
+                    this.data = [];
+                    return;
+                }
+                Papa.parse(data, {
+                    ...this.config,
+                    complete: function (results) {
+                        for (let i = 0; i < results.data.length; i++) {
+                            currentThis.data.push({
+                                SubEN: results.data[i][0],
+                                SubVN: results.data[i][1],
+                                Time: currentThis.ConverSencondToHourt(parseFloat(results.data[i][2]))
+                            });
+                            
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>

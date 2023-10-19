@@ -1,83 +1,144 @@
 ﻿@model Tommava.Models.CombinedViewModel.CombinedViewModel
-<nav id="menu-home" class="menu-home">
-    <a href="/"><button class="c-menu__close"><i class="fa fa-home" aria-hidden="true"></i></button></a>
-    <ul class="c-menu-home">
-        @foreach (var category in Model.CategoryData)
-        {
-            <a href="/Video-Hoc-Tieng-Anh/c=45" class="c-menu__link">
-            <li class="c-menu__item"><i class="fa fa-leanpub" aria-hidden="true"></i>@category.Name</li>
-            </a>
+
+<style>
+    .menu-home ul {
+        padding: 8px 8px;
+        overflow-y: auto;
+        max-height: 840px;
+    }
+
+    .menu-home li {
+        padding: 12px 24px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+        background-color: #fff;
+        list-style-type: none;
+    }
+
+        .menu-home li a{
+            color: #000;
+            font-weight: 700;
         }
 
-        <hr>
-        <div>
-            <div class="group_nav">
-                <a href="/kien-thuc-kinh-nghiem" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-book fa-lg" aria-hidden="true">
+    .menu-home li:hover {
+            opacity: 0.5;
+        }
 
-            </i>Kiến thức - Kinh
-            nghiệm
-        </li>
-        </a>
-        </div>
-        <div class="sub_nav">
-            <a href="/Ngu-phap-tieng-Anh/pc=3" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Ngữ pháp tiếng Anh
-        </li>
-        </a>
-        <a href="/Ngu-phap-tieng-Anh-can-ban/pc=16" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Ngữ pháp căn bản
-        </li>
-        </a>
-        <a href="/Ngu-phap-tieng-anh-nang-cao/pc=19" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Ngữ pháp nâng cao
-        </li>
-        </a>
-        <a href="/kinh-nghiem-ky-nang/pc=17" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Kinh nghiệm, Kỹ năng
-        </li>
-        </a>
-        <a href="/post/ngu-phap-tieng-anh-bai-giang-bang-video=599" class="c-menu__link">
-        <li class="c-menu__item"><i class="fa fa-book fa-lg" aria-hidden="true"></i>Bài giảng video</li>
-        </a>
-        <a href="/Cau-truc-cau-tieng-Anh/pc=12" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-book fa-lg" aria-hidden="true"></i>Câu trong tiếng Anh
-        </li>
-        </a>
-        <a href="/Tu-vung-tieng-Anh/pc=11" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-file-word-o fa-lg" aria-hidden="true"></i>Từ vựng tiếng
-            Anh
-        </li>
-        </a>
-        <a href="/Tai-lieu-tieng-Anh/pc=13" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-download fa-lg" aria-hidden="true"></i>Tài liệu tiếng
-            Anh
-        </li>
-        </a>
-        <a href="/Tieng-Anh-chuyen-nganh/pc=14" class="c-menu__link">
-        <li class="c-menu__item">
-            <i class="fa fa-cogs fa-lg" aria-hidden="true"></i>Tiếng Anh chuyên
-            ngành
-        </li>
-        </a>
-        </div>
-        </div>
-        <hr>
-        <a href="/doc-bao-anh-viet/pc=8" class="c-menu__link">
-        <li class="c-menu__item"><i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i>Đọc báo Anh-Việt</li>
-        </a>
-        <hr>
-        <li style="margin-bottom: 10em;">
-            <span class="menu-footer"
-                  style="text-align:center;display:block;">...</span><br><br><br><br><br>
-        </li>
-    </ul>
+    .menu-home {
+        height: auto;
+    }
+    .active{
+        background-color: blue !important
+    }
+    .active i{
+            color: yellow !important;
+        }
+    .active a{
+            color: #fff !important
+        }
+</style>
+<nav style="background-color: #ccc;" id="menu-home" class="menu-home">
+    <div id="menu_home">
+        <ul>
+            @if (ViewBag.IdCategory != null)
+            {
+                <li v-for="item in categoryData" v-bind:class="['mb-2',{'active': @ViewBag.IdCategory === item.id }]">
+                    <a :href=`/danh-muc/${item.slug}`>
+
+                        <i class="fa-solid fa-comment" style="color: blue"></i>
+                        {{item.name}}
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li v-for="item in categoryData" class="mb-2">
+                    <a :href=`/danh-muc/${item.slug}`>
+
+                        <i class="fa-solid fa-comment" style="color: blue"></i>
+                        {{item.name}}
+                    </a>
+                </li>
+            }
+
+
+        </ul>
+    </div>
 </nav>
+<script>
+
+    //$(document).ready(function () {
+    //    var currentURL = window.location.href;
+    //    const currentDomain = window.location.origin;
+    //    if (currentURL.endsWith('/')) {
+    //        currentURL = currentURL.slice(0, -1);
+    //    }
+    //    if (currentURL !== currentDomain) {
+    //        $("#menu-home").hide();
+    //    } else {
+    //        $("#menu-home").show();
+    //    }
+    //});
+</script>
+<script>
+    var menu_home = new Vue({
+        el: "#menu_home",
+        data: {
+            categoryData: [{ name: "Học tiếng anh qua Video" }],
+        },
+        mounted() {
+            var storedData = getCookie('categoryData');
+            var expirationTime = getCookie('categoryDataExpirationTime');
+
+            if (storedData && expirationTime) {
+                if (Date.now() < parseInt(expirationTime)) {
+                    this.categoryData = JSON.parse(storedData);
+                } else {
+                    this.fetchCategoryData();
+                }
+            } else {
+                this.fetchCategoryData();
+            }
+        },
+        methods: {
+            fetchCategoryData() {
+                axios.get('/Home/GetAllCategory')
+                    .then(res => {
+                        // Lưu dữ liệu vào Cookie
+                        setCookie('categoryData', JSON.stringify(res.data), 30); // 30 phút
+                        // Cập nhật thời gian sống (30 phút)
+                        var expirationTime = Date.now() + 30 * 60 * 1000; // 30 phút
+                        setCookie('categoryDataExpirationTime', expirationTime.toString(), 30); // 30 phút
+                        this.categoryData = res.data;
+                        console.log(this.categoryData);
+                    });
+            }
+        }
+    });
+
+    // Hàm thiết lập Cookie
+    function setCookie(name, value, minutes) {
+        var expires = "";
+        if (minutes) {
+            var date = new Date();
+            date.setTime(date.getTime() + (minutes * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+
+    // Hàm lấy Cookie
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+</script>

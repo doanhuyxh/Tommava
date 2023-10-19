@@ -6,6 +6,7 @@ using Tommava.Models.videoVM;
 using Microsoft.EntityFrameworkCore;
 using Tommava.Models.CategoryVM;
 using Tommava.Models.CombinedViewModel;
+using Tommava.Models.Page;
 
 namespace Tommava.Controllers
 {
@@ -22,74 +23,89 @@ namespace Tommava.Controllers
 
 
         }
-
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategory()
         {
-            var rs = await (from i in _context.Video
-                            where i.IsDeleted == false
-                            select new VideoVM
-                            {
-                                Id = i.Id,
-                                Name = i.Name,
-                                Description = i.Description,
-                                Img = i.Img,
-                                VideoLink = i.VideoLink,
-                                CategoryId = i.CategoryId,
-                                CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
-                                GenreId = i.GenreId,
-                                GenreName = _context.Genre.FirstOrDefault(c => c.Id == i.GenreId)!.Name ?? "",
-                                IsDeleted = i.IsDeleted,
-                                IsActive = i.IsActive,
-                                IsHome = i.IsHome,
-                                CreatedDate = i.CreatedDate,
-                            }).Take(20).OrderByDescending(x => x.CreatedDate).ToListAsync();
+            var cate = await _context.Category.OrderByDescending(x=>x.CreatedDate).ToListAsync();
+            return Ok(cate);
+        }
 
-            var groupedResults = await (from i in _context.Video
-                                        where i.IsDeleted == false
-                                        group i by _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name into categoryGroup
-                                        select new CategoryVM 
-                                        {
-                                            Name = categoryGroup.Key,
-                                            listDataVideo = categoryGroup.Select(item => new VideoVM
-                                            {
-                                                Id = item.Id,
-                                                Name = item.Name,
-                                                Description = item.Description,
-                                                Img = item.Img,
-                                                VideoLink = item.VideoLink,
-                                                CategoryId = item.CategoryId,
-                                                CategoryName = _context.Category.FirstOrDefault(c => c.Id == item.CategoryId)!.Name ?? "",
-                                                GenreId = item.GenreId,
-                                                GenreName = _context.Genre.FirstOrDefault(c => c.Id == item.GenreId)!.Name ?? "",
-                                                IsDeleted = item.IsDeleted,
-                                                IsActive = item.IsActive,
-                                                IsHome = item.IsHome,
-                                                CreatedDate = item.CreatedDate,
-                                            }).Take(20).OrderByDescending(x => x.CreatedDate).ToList()
-                                        }).ToListAsync();
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string filter = "news")
+        {
+            ViewBag.userName = User.Identity.Name;
+            ViewBag.filter = filter;
+
+            var latestCategoryId = await _context.Category
+                .Where(c => !c.IsDeleted)
+                .OrderByDescending(c => c.CreatedDate)
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
+
+            IQueryable<VideoVM> queryToFilter = from i in _context.Video
+                                                where i.IsDeleted == false && i.CategoryId == latestCategoryId
+                                                select new VideoVM
+                                                {
+                                                    Id = i.Id,
+                                                    Name = i.Name,
+                                                    Description = i.Description,
+                                                    NameVn = i.NameVn,
+                                                    Img = i.Img,
+                                                    Slug = i.Slug,
+                                                    ShortDescription =i.ShortDescription,
+                                                    CategoryId = i.CategoryId,
+                                                    CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
+                                                    GenreId = i.GenreId,
+                                                    GenreName = _context.Genre.FirstOrDefault(c => c.Id == i.GenreId)!.Name ?? "",
+                                                    IsDeleted = i.IsDeleted,
+                                                    IsActive = i.IsActive,
+                                                    IsHome = i.IsHome,
+                                                    ViewCount = i.ViewCount,
+                                                    CreatedDate = i.CreatedDate,
+                                                };
+
+            IQueryable<VideoVM> query = null;
+
+            switch (filter)
+            {
+                case "views":
+                    query = queryToFilter.OrderByDescending(x => x.ViewCount);
+                    break;
+                case "hot":
+                    // Thêm logic lọc theo tiêu chí "Được đề xuất"
+                    query = queryToFilter.OrderByDescending(x => x.ViewCount);
+                    break;
+                case "news":
+                default:
+                    query = queryToFilter.OrderByDescending(x => x.CreatedDate);
+                    break;
+            }
+
+
+            var totalVideos = await query.CountAsync();
+
+            var videos = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var categoryName = _context.Category.FirstOrDefault(c => c.Id == latestCategoryId)?.Name;
+            ViewBag.Category = categoryName ?? "Default Category Name";
+            ViewBag.IdCategory = latestCategoryId;
+
             var combinedViewModel = new CombinedViewModel
             {
-                VideoData = rs,
-                CategoryData = groupedResults
+                VideoData = videos,
+                VideoPage = new PagedResults<VideoVM>
+                {
+                    Items = videos,
+                    PageNumber = page,
+                    PageSize = pageSize,
+                    TotalItems = totalVideos
+                }
             };
-
 
             return View(combinedViewModel);
         }
-        //public async Task<IActionResult> GetNews()
-        //{
-        //    var categories = _context.Category.ToList();
-        //    var combinedViewModel = new CombinedViewModel
-        //    {
-        //        CategoryData = categories.Select(category => new CategoryVM
-        //        {
-        //           Name = category.Name,
-        //           Id  = category.Id,
-
-        //        }).ToList(),
-        //    };
-        //    return PartialView("_nav", combinedViewModel.CategoryData);
-        //}
 
 
         public IActionResult Privacy()
