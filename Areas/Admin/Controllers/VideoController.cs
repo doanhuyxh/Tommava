@@ -12,6 +12,7 @@ using Tommava.Models.TimeLineVideoVM;
 namespace Tommava.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class VideoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -37,7 +38,6 @@ namespace Tommava.Areas.Admin.Controllers
                                 Name = i.Name,
                                 Description = i.Description,
                                 Img = i.Img,
-                                VideoLink = i.VideoLink,
                                 CategoryId = i.CategoryId,
                                 CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
                                 GenreId = i.GenreId,

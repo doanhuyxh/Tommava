@@ -27,8 +27,9 @@
 <body>
     <partial name="_header" />
 
+    @await Component.InvokeAsync("Menu")
   
-    <partial name="_nav" />
+    @*<partial name="_nav" />*@
 
         <main role="main" >
             @RenderBody()

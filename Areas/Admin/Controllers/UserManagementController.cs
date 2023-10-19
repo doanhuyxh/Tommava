@@ -10,6 +10,7 @@ using Tommava.Models.AccountViewModels;
 namespace Tommava.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserManagementController : Controller
     {
         private readonly ApplicationDbContext _context;

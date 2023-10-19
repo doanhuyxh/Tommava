@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Category>
+
+<style>
+    .menu-home ul {
+        padding: 8px 8px;
+        overflow-y: auto;
+        max-height: 840px;
+    }
+
+    .menu-home li {
+        padding: 12px 24px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+        background-color: #fff;
+        list-style-type: none;
+    }
+
+        .menu-home li a {
+            color: #000;
+            font-weight: 700;
+        }
+
+        .menu-home li:hover {
+            opacity: 0.5;
+        }
+
+    .menu-home {
+        height: auto;
+    }
+
+    .active {
+        background-color: blue !important
+    }
+
+        .active i {
+            color: yellow !important;
+        }
+
+        .active a {
+            color: #fff !important
+        }
+</style>
+<nav style="background-color: #ccc;" id="menu-home" class="menu-home">
+    <div id="menu_home">
+        <ul>
+            @foreach(var item in Model)
+            {
+                <li>
+                    <a href=`/danh-muc/${item.slug}`>
+
+                        <i class="fa-solid fa-comment" style="color: blue"></i>
+                        @item.Name
+                    </a>
+                </li>
+            }
+            
+
+
+        </ul>
+    </div>
+</nav>

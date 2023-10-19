@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Tommava.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class GenreController : Controller
     {
         private readonly ApplicationDbContext _context;

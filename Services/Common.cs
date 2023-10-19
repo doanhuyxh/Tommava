@@ -1,4 +1,5 @@
 ﻿using Tommava.Data;
+using Tommava.Models;
 
 namespace Tommava.Services
 {
@@ -74,6 +75,12 @@ namespace Tommava.Services
                 }
             }
             return $"/upload/ImgVideo/{path}";
+        }
+
+
+        public IEnumerable<Category> GetAllCategory()
+        {
+            return _context.Category;
         }
 
     }
