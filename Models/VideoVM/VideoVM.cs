@@ -10,8 +10,9 @@ namespace Tommava.Models.videoVM
         public string Name { get; set; }
         [Display(Name = "Chi tiết video")]
         public string Description { get; set; }
+        [Display(Name="Mô tả ngắn")]
+        public string ShortDescription { get; set; }
         public string? Img { get; set; }
-        public string? VideoLink { get; set; }
         [Display(Name = "Thể loại")]
         public int GenreId { get; set; }
         public string? GenreName { get; set; }
@@ -22,16 +23,19 @@ namespace Tommava.Models.videoVM
         public bool IsDeleted { get; set; }
         public bool IsHome { get; set; }
         public bool IsActive { get; set; }
-        [Display(Name = "Video")]
-        public IFormFile? VideoFile { get; set; }
         [Display(Name = "Ảnh đại diện")]
         public IFormFile? ImgFile { get; set; }
 
         public List<VideoVM>? listDataVideo { get; set; }
 
+        public List<EpisodesVideoVM.EpisodesVideoVM>? listDataMain { get; set; }
+
+
+        public EpisodesVideoVM.EpisodesVideoVM? VideoMain { get; set; }
+
         public List<Category>? listCate { get; set; }
 
-        public List<TimeLineVideoVM.TimeLineVideoVM> listTimeLine { get; set; }
+        public List<TimeLineVideoVM.TimeLineVideoVM>? listTimeLine { get; set; }
 
 
         public int? ViewCount { get; set; } = 0;
@@ -50,7 +54,6 @@ namespace Tommava.Models.videoVM
                 Name = video.Name,
                 Description = video.Description,
                 Img = video.Img,
-                VideoLink = video.VideoLink,
                 GenreId = video.GenreId,
                 CategoryId = video.CategoryId,
                 IsHome = video.IsHome,
@@ -72,7 +75,6 @@ namespace Tommava.Models.videoVM
                 Name = vm.Name,
                 Description = vm.Description,
                 Img = vm.Img ?? "",
-                VideoLink = vm.VideoLink ?? "",
                 GenreId = vm.GenreId,
                 IsHome = vm.IsHome,
                 IsActive = vm.IsActive,

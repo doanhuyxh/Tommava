@@ -3,6 +3,7 @@ using Tommava.Services;
 
 namespace Tommava.ViewComponents
 {
+    [ViewComponent(Name = "Category")]
     public class MenuComponent : ViewComponent
     {
         private ICommon _icommom;

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
 using Tommava.Data;
 using Tommava.Models.CombinedViewModel;
+using Tommava.Models.EpisodesVideoVM;
 using Tommava.Models.Page;
 using Tommava.Models.TimeLineVideoVM;
 using Tommava.Models.videoVM;
@@ -40,32 +41,63 @@ namespace Tommava.Controllers
             return NotFound();
         }
         [Route("video/{slug}")]
-        public async Task <IActionResult> Index(string slug, int id)
+        public async Task <IActionResult> Index(string slug, int id, int episode = 1)
         {
             ViewBag.userName = User.Identity.Name;
             ViewBag.Slug = slug;
+
             var pr = (from _pr in _context.Video
-                     where _pr.Id == id
+                       where _pr.Id == id
                      select new VideoVM
                      {
                          Id = id,
                          CategoryId = _pr.CategoryId,
-                         VideoLink = _pr.VideoLink,
+                         ShortDescription = _pr.ShortDescription,
                          Name = _pr.Name,
                          NameVn = _pr.NameVn,
                          ViewCount = _pr.ViewCount,
                          Description = _pr.Description,
-                         listTimeLine = _context.TimeLineVideo
-                                        .Where(img => img.VideoId == id)
-                                        .Select(img => new TimeLineVideoVM
+                         
+                           VideoMain = _context.EpisodesVideo
+                                        .Where(img => img.VideoId == id && img.EpisodeNumber == episode)
+                                        .Select(img => new EpisodesVideoVM
                                         {
-                                            TimePoint = img.TimePoint,
-                                            VideoId = img.VideoId,
-                                            Vietnamese = img.Vietnamese,
-                                            English = img.English,
+                                            Id = img.Id,
+                                            VideoLink = img.VideoLink,
+                                            EpisodeNumber = img.EpisodeNumber,
+                                            TitleEN = img.TitleEN,
+                                            TitleVN = img.TitleVN,
+                                            Description = img.Description,
+                                            ViewCount = img.ViewCount,
+                                            ImgLink = img.ImgLink,
+                                        }).FirstOrDefault(),
+                        
+                         listDataMain = _context.EpisodesVideo
+                                        .Where(img => img.VideoId == id)
+                                        .Select(img => new EpisodesVideoVM
+                                        {
+                                            Id = img.Id,
+                                            EpisodeNumber = img.EpisodeNumber,
+                                            TitleEN = img.TitleEN,
+                                            TitleVN = img.TitleVN,
+                                            Description = img.Description,
+                                            ViewCount = img.ViewCount,
+                                            ImgLink = img.ImgLink,
                                         }).ToList()
 
                      }).FirstOrDefault();
+
+            int selectedEpisodeId = pr.VideoMain.Id;
+            var timeLineForSelectedEpisode = _context.TimeLineVideo
+                                             .Where(img => img.VideoId == selectedEpisodeId)
+                                             .Select(img => new TimeLineVideoVM
+                                             {
+                                                 TimePoint = img.TimePoint,
+                                                 VideoId = img.VideoId,
+                                                 Vietnamese = img.Vietnamese,
+                                                 English = img.English,
+                                             }).ToList();
+            pr.listTimeLine = timeLineForSelectedEpisode;
             if (pr != null)
             {
                 var prRs = _context.Video.Where(img => img.Id == pr.Id).FirstOrDefault();
@@ -77,7 +109,7 @@ namespace Tommava.Controllers
                                 {
                                     Id = _last.Id,
                                     CategoryId = _last.CategoryId,
-                                    VideoLink = _last.VideoLink,
+                                    ShortDescription = _last.ShortDescription,
                                     Slug = _last.Slug,
                                     Name = _last.Name,
                                     NameVn = _last.NameVn,
@@ -124,7 +156,7 @@ namespace Tommava.Controllers
                                                     NameVn = i.NameVn,
                                                     Img = i.Img,
                                                     Slug = i.Slug,
-                                                    VideoLink = i.VideoLink,
+                                                    ShortDescription = i.ShortDescription,
                                                     CategoryId = i.CategoryId,
                                                     CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
                                                     GenreId = i.GenreId,

@@ -59,6 +59,13 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
+        position: absolute;
+        top: 22em;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        text-align: center;
+        padding: 10px;
     }
 
         .cue-display .description-cues {
@@ -117,12 +124,12 @@
     div.scroll-sub {
         position: relative;
         overflow-y: auto;
-        max-height: 39em;
+        max-height: 47em;
         background: #fff;
     }
 
     #video_obtion_block, div.scroll-sub {
-        height: 69%;
+        height: 703px;
     }
 
     #video_obtion_block, .jcarousel.tv-go, div#line_tra_tu_en, div#toomva-go-check2, div.modal-body, div.scroll-rbb, div.scroll-sub {
@@ -270,14 +277,50 @@
         position: absolute;
         margin-left: 5px;
     }
+
+    a.btn-episode {
+        margin: 3px;
+        width: 34px;
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+        border: 1px solid #ccc;
+    }
+
+    .text-both {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    div#line_tra_tu_en {
+        width: 100%;
+        display: inline-flex;
+        padding: 10px;
+        background: orange;
+        color: #fff;
+        font-size: 22px;
+        overflow-x: scroll;
+        border-bottom: 2px solid #228b22;
+    }
+
+    span.word_tra_tu {
+        padding: 0.2em 0.4em;
+        border: 1px solid;
+        margin-left: 0.2em;
+        cursor: pointer;
+        white-space: nowrap;
+    }
 </style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-md-12 col-xl-9" style="position: relative;">
+
             <video controls style="width: 100%; height: auto;" id="video">
-                <source src="@Model.VideoVMOj.VideoLink" type="video/mp4">
+                <source src="@Model.VideoVMOj.VideoMain.VideoLink" type="video/mp4">
             </video>
-            <div class="cue-display wsshadow-1697613594557" style="position: absolute;top: 22em; left: 50%; transform: translateX(-50%);  color: white; text-align: center; padding: 10px;">
+
+
+            <div class="cue-display wsshadow-1697613594557" style="">
                 <span class="description-cues" aria-live="assertive"></span>
                 <span class="cue-wrapper" id="cue-wrapper" style="font-size: 150%;">
                     <span class="cue-line">
@@ -307,36 +350,17 @@
                     </div>
                 </div>
             </div>
-
-            <div class="mt-3 p-3 bg-white">
-                <div class="mb-4" style="border-bottom: 1px solid #ccc">
-                    <h5>@Model.VideoVMOj.Name</h5>
-                    <h5>@Model.VideoVMOj.NameVn</h5>
-                    <p>
-                        @Model.VideoVMOj.ViewCount lượt xem
-                    </p>
-                </div>
-                <div class="d-flex flex-row">
-                    <div>
-                        <img class="image-user-avatar" src="~/upload/avatar/blank_avatar.png" width="48" />
-                    </div>
-                    <div>
-                        Admin
-                        <p>Ngày đăng: @Model.VideoVMOj.CreatedDate</p>
-                        <div class="p-3">
-                            @Html.Raw(Model.VideoVMOj.Description)
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-
         <div class="col-12 col-md-12 col-xl-3">
-            <div class="botom-scroll-sub-top noselect text-center">
+            <div class="botom-scroll-sub-top noselect text-center" id="nav-tab" role="tablist">
+                <span class="title-scroll mobile-only" id="che_do_tra_tu">Tra từ</span>
                 <span id="video_obtion" style="">
-                    CHỨC
-                    NĂNG
+                    Chức năng
                 </span>
+            </div>
+            <div id="line_tra_tu">
+                <div id="line_tra_tu_en">
+                </div>
             </div>
             <div id="DataTable" class="scroll-sub">
                 @foreach (var item in Model.VideoVMOj.listTimeLine)
@@ -482,6 +506,52 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xl-9" style="position: relative;">
+            <div class="mt-3 p-3 bg-white">
+                <div class="mb-4 d-flex flex-row align-items-center" style="border-bottom: 1px solid #ccc">
+                    <div class="text-both">
+                        Tập:
+                    </div>
+                    @foreach (var items in Model.VideoVMOj.listDataMain)
+                    {
+                        <div>
+                            <a class="btn  btn-episode" href="/video/@ViewBag.Slug?id=@Model.VideoVMOj.Id&episode=@items.EpisodeNumber">@items.EpisodeNumber</a>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+            <div class="mt-3 p-3 bg-white">
+                <div class="mb-4" style="border-bottom: 1px solid #ccc">
+                    <h5>@Model.VideoVMOj.Name</h5>
+                    <h5>@Model.VideoVMOj.NameVn</h5>
+                    <p>
+                        @Model.VideoVMOj.ViewCount lượt xem
+                    </p>
+                </div>
+                <div class="d-flex flex-row">
+                    <div>
+                        <img class="image-user-avatar" src="~/upload/avatar/blank_avatar.png" width="48" />
+                    </div>
+                    <div>
+                        Admin
+                        <p>Ngày đăng: @Model.VideoVMOj.CreatedDate</p>
+                        <div class="p-3">
+                            @Html.Raw(Model.VideoVMOj.Description)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-12 col-md-12 col-xl-3">
             <div class="mt-3 search-video-total">
                 @foreach (var itemMain in Model.VideoData)
                 {
@@ -521,13 +591,113 @@
 
     </div>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-inline-flex align-items-center">
+                        <p id="click-word"></p>
+                        <i class="fa-solid fa-volume-high" style="cursor: pointer;" onclick="speakWordModal('click-word', 'male')"></i>
 
+                    </div>
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="loading">
+                    </div>
+                    <p>
+                        Nghĩa của từ:
+                        <ul id="meaning-click">
+                        </ul>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
+
+    function speakWordModal(elementId, voiceName) {
+        const wordElement = document.getElementById(elementId);
+        const textToSpeak = wordElement.textContent;
+        const msg = new SpeechSynthesisUtterance(textToSpeak);
+
+        const voices = window.speechSynthesis.getVoices();
+
+        const maleVoice = voices.find(voice => voice.name === voiceName);
+
+        if (maleVoice) {
+            msg.voice = maleVoice;
+        }
+        window.speechSynthesis.speak(msg);
+    }
+    function speakWord(elementId, voiceName) {
+        const wordElement = document.getElementById(elementId);
+        const textToSpeak = wordElement.textContent;
+        const msg = new SpeechSynthesisUtterance(textToSpeak);
+
+        const voices = window.speechSynthesis.getVoices();
+
+        const maleVoice = voices.find(voice => voice.name === voiceName);
+
+        if (maleVoice) {
+            msg.voice = maleVoice;
+        }
+        window.speechSynthesis.speak(msg);
+    }
     document.addEventListener("DOMContentLoaded", function () {
-        
-        
+        function displayWordMeaning(word) {
+            // Hiển thị modal
+            $('#exampleModal').modal('show');
+
+            // Hiển thị từ được nhấp vào modal
+            $('#click-word').text(word);
+
+            // Hiển thị biểu tượng nạp
+            $('.loading').fadeIn();
+
+            fetch('/tudien')
+                .then(response => response.json())
+                .then(data => {
+                    // Ẩn biểu tượng nạp
+                    $('.loading').fadeOut();
+
+                    const searchResult = data.tudien.find(item => item.word.trim() === word.trim());
+                    const meaningList = document.getElementById('meaning-click');
+
+                    if (searchResult) {
+                        meaningList.innerHTML = '';
+                        const listItem = document.createElement('li');
+                        listItem.textContent = searchResult.note;
+                        meaningList.appendChild(listItem);
+                    } else {
+                        meaningList.innerHTML = '';
+                        const notFoundItem = document.createElement('li');
+                        notFoundItem.textContent = 'Không tìm thấy từ: ' + word;
+                        meaningList.appendChild(notFoundItem);
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu JSON:', error);
+                });
+
+        }
+
+        $("#che_do_tra_tu").click(function () {
+            if ($("#line_tra_tu").is(":visible")) {
+                $("#line_tra_tu").hide();
+                $("#che_do_tra_tu").text("Tra từ");
+            } else {
+                $("#line_tra_tu").show();
+                $("#che_do_tra_tu").text("Đóng");
+            }
+        });
+
         function toggleVideoLoop() {
             var video = document.getElementById('video');
             var checkbox = document.getElementById('AutoPrev');
@@ -582,24 +752,13 @@
         toggleSpeed.click(function () {
             speedList.slideToggle();
         });
-        function speakWord(elementId, voiceName) {
-            const wordElement = document.getElementById(elementId);
-            const textToSpeak = wordElement.textContent;
-            const msg = new SpeechSynthesisUtterance(textToSpeak);
 
-            const voices = window.speechSynthesis.getVoices();
-
-            const maleVoice = voices.find(voice => voice.name === voiceName);
-
-            if (maleVoice) {
-                msg.voice = maleVoice;
-            }
-            window.speechSynthesis.speak(msg);
-        }
 
         const data = @Html.Raw(Json.Serialize(Model.VideoVMOj.listTimeLine));
         const video = document.getElementById("video");
         const subtitleContainer = document.querySelector("#cue-wrapper");
+
+        const subTraTu = document.querySelector("#line_tra_tu_en");
 
         function formatTime(seconds) {
             const hours = Math.floor(seconds / 3600);
@@ -634,7 +793,7 @@
                 const currentTime = formatTime(video.currentTime);
 
                 subtitleContainer.innerHTML = "";
-
+                subTraTu.innerHTML = "";
                 data.forEach((item) => {
                     if (item.timePoint === currentTime) {
                         const cueLine = document.createElement("span");
@@ -661,6 +820,19 @@
                         }
 
                         subtitleContainer.appendChild(cueLine);
+
+
+                        item.english.split(" ").forEach((word) => {
+                            const listTraTu = document.createElement("span")
+                            listTraTu.classList.add("word_tra_tu")
+                            listTraTu.textContent = word + " ";
+                            //listTraTu.setAttribute("data-bs-toggle", "modal");
+                            //listTraTu.setAttribute("data-bs-target", "#exampleModal");
+                            listTraTu.addEventListener("click", function () {
+                                displayWordMeaning(word);
+                            });
+                            subTraTu.appendChild(listTraTu);
+                        });
                     }
                 });
                 const searchWords = document.querySelectorAll('.word');
@@ -714,12 +886,12 @@
         }
         $('input[type="radio"]').change(function () {
             if ($(this).is(":checked")) {
-                var selectedValue = $(this).val(); 
-                toggleSubtitle(selectedValue); 
+                var selectedValue = $(this).val();
+                toggleSubtitle(selectedValue);
             }
         });
 
-      
+
         var defaultCheckedRadio = $('input[type="radio"]:checked');
         var defaultValue = defaultCheckedRadio.val();
 
@@ -797,8 +969,77 @@
                 playPauseButton.textContent = "Pause";
             } else {
                 video.pause();
-                playPauseButton.textContent = "Play"; 
+                playPauseButton.textContent = "Play";
             }
         });
+
+        function timeToSeconds2(timeString) {
+            const timeParts = timeString.split(":");
+            if (timeParts.length === 3) {
+                const hours = parseInt(timeParts[0], 10);
+                const minutes = parseInt(timeParts[1], 10);
+                const seconds = parseInt(timeParts[2], 10);
+                if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+                    return hours * 3600 + minutes * 60 + seconds;
+                }
+            }
+            return 0; // Giá trị mặc định nếu định dạng không hợp lệ
+        }
+        const speedList2 = document.querySelectorAll('.speed-type input[name="radioName"]');
+
+        // Xử lý sự kiện khi thay đổi tốc độ
+        speedList2.forEach(input => {
+            input.addEventListener('change', () => {
+                const speed = parseFloat(input.value);
+                video.playbackRate = speed;
+                const currentTime = video.currentTime;
+                const adjustedTimeInSeconds = currentTime / speed;
+                const currentTimeMain = formatTime(adjustedTimeInSeconds);
+
+                adjustSubtitleDisplay(currentTimeMain);
+            });
+        });
+
+        function adjustSubtitleDisplay(newTime) {
+            // Xóa tất cả phụ đề hiện tại
+            video.ontimeupdate = function () {
+
+                const speed = video.playbackRate;
+                const adjustedTime = currentTime / speed;
+                const currentTimeMain = formatTime(adjustedTime);
+
+                subtitleContainer.innerHTML = '';
+                data.forEach((item) => {
+                    if (item.timePoint === currentTimeMain) {
+                        const cueLine = document.createElement("span");
+                        cueLine.classList.add("cue-line");
+                        const cue = document.createElement("span");
+                        cue.classList.add("cue");
+
+                        if (language === 'english' || language === 'both') {
+                            item.english.split(" ").forEach((word) => {
+                                const wordSpan = document.createElement("span");
+                                wordSpan.classList.add("word");
+                                wordSpan.textContent = word + " ";
+                                cue.appendChild(wordSpan);
+                            });
+                        }
+
+                        cueLine.appendChild(cue);
+
+                        if (language === 'vietnamese' || language === 'both') {
+                            const vietnameseCue = document.createElement("span");
+                            vietnameseCue.classList.add("cue-line");
+                            vietnameseCue.innerHTML = `<span class="cue">${item.vietnamese}</span>`;
+                            cueLine.appendChild(vietnameseCue);
+                        }
+
+                        subtitleContainer.appendChild(cueLine);
+                    }
+                });
+            }
+        }
     });
+
+
 </script>

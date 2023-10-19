@@ -37,11 +37,9 @@ namespace Tommava.Controllers
         }
 
         [HttpGet]
-        [Route("Login")]
         public IActionResult Login() { return View(); }
 
         [HttpGet]
-        [Route("Register")]
         public IActionResult Register() { return View(); }
 
         [HttpPost]
@@ -154,7 +152,7 @@ namespace Tommava.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home"); // Chuyển hướng đến trang chủ hoặc trang khác
         }
 
         public IActionResult AccessDenied()

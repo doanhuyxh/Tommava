@@ -47,8 +47,8 @@
         <ul>
             @foreach(var item in Model)
             {
-                <li>
-                    <a href=`/danh-muc/${item.slug}`>
+                <li class="@(item.Id == ViewBag.IdCategory ? "active" : "") mb-3">
+                    <a href="/danh-muc/@item.Slug">
 
                         <i class="fa-solid fa-comment" style="color: blue"></i>
                         @item.Name

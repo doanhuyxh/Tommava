@@ -51,7 +51,7 @@ namespace Tommava.Controllers
                                                     NameVn = i.NameVn,
                                                     Img = i.Img,
                                                     Slug = i.Slug,
-                                                    VideoLink = i.VideoLink,
+                                                    ShortDescription =i.ShortDescription,
                                                     CategoryId = i.CategoryId,
                                                     CategoryName = _context.Category.FirstOrDefault(c => c.Id == i.CategoryId)!.Name ?? "",
                                                     GenreId = i.GenreId,
