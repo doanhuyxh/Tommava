@@ -1,0 +1,350 @@
+﻿
+<div id="AppVueEpisodesVideo">
+    <div class="row">
+        <div class="col-12 row">
+            <div class="col-3"><div v-on:click="AddEpisodesVideo()" class="btn btn-success">Thêm tập mới</div></div>
+        </div>
+        <div class="container col-12">
+            <table class="table table-striped" id="tableVideo">
+                <thead class="text-dark table-light">
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center text-nowrap">Tên tiếng anh</th>
+                        <th class="text-center text-nowrap">Tên tiếng việt</th>
+                        <th class="text-center text-nowrap">Ảnh đại diện</th>
+                        <th class="text-center text-nowrap">Video</th>
+                        <th class="text-center text-nowrap">Tập</th>                        
+                        <th class="text-center text-nowrap">TimeLine</th>                        
+                        <th class="text-center text-nowrap">Xem</th>                        
+                        <th class="text-center text-nowrap"></th>
+                    </tr>
+                </thead>
+                <tr v-for="(item, index) in data">
+                    <td class="text-center">{{index+1}}</td>
+                    <th class="text-center text-wrap">{{item.titleEN}}</th>
+                    <th class="text-center text-wrap">{{item.titleVN}}</th>
+                    <th class="text-center"><span class="btn btn-info opacity-5" v-on:click="ViewImg(item.imgLink)"><i class="fa-solid fa-image" style="color: #1f5129;"></i></span></th>
+                    <th class="text-center text-wrap">{{item.videoName}}</th>
+                    <th class="text-center">{{item.episodeNumber}}</th>                    
+                    <th class="text-center text-wrap"><span class="btn btn-info opacity-5" v-on:click="ViewTimeLine(item.id)"><i class="fa-solid fa-timeline" style="color: #e62828;"></i></span></th>
+                    <th class="text-center text-wrap"><span class="btn btn-info opacity-5" v-on:click="ViewVideo(item.videoLink)"><i class="fa-solid fa-photo-film" style="color: #1f5129;"></i></span></th>
+                    <td class="text-center text-nowrap">
+                        <span class="btn btn-warning" v-on:click="EditEpisodesVideo(item.id)">Cập nhật</span>
+                        <span class="btn btn-danger" v-on:click="DeleteEpisodesVideo(item.id)">Xóa</span>
+                    </td>
+                </tr>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalTimeLine" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Timeline video</h5>
+                    <div>
+                        <button type="button" class="btn btn-success" v-on:click="AddTimeLine">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" v-on:click="AddTimeLineExcel">
+                            <i class="fa-regular fa-file-excel" style="color: #0e620f;"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body" id="ModalTimeLineContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalAddTimeLine" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalAddTimeLineTitle">TimeLine</h5>
+                </div>
+                <div class="modal-body" id="ModalAddTimeLineContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" v-on:click="SaveTimeLine()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalAddTimeLineExcel" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalAddTimeLineTitleExcel">TimeLine</h5>
+                    <button type="button" class="btn btn-success" v-on:click="DonwloadExcel">
+                        <i class="fa-solid fa-download" style="color: #30453c;"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="ModalAddTimeLineContentExcel">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" v-on:click="SaveTimeLineExcel()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    var AppVueEpisodesVideo = new Vue({
+        el: "#AppVueEpisodesVideo",
+        data: {
+            data: [],
+            currentVideoId: 0,
+            ckName: "",
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.initData();
+        },
+        methods: {
+            initData() {
+                fetch("/Admin/EpisodesVideo/GetData")
+                    .then(res => res.json())
+                    .then(data => {
+                        this.data = data.object;
+                    })
+            },
+            AddEpisodesVideo() {
+                $("#BigModelContent").load(`/Admin/EpisodesVideo/AddData`, function () {
+                    $("#staticBigModel").modal("show");
+                    $("#staticBigModellTitle").html("Thêm tập mới")
+                })
+            },
+            EditEpisodesVideo(id) {
+                $("#BigModelContent").load(`/Admin/EpisodesVideo/EditData?id=${id}`, function () {
+                    $("#staticBigModel").modal("show");
+                    $("#staticBigModellTitle").html("Cập nhật thông tin")
+                })
+            },
+            DeleteEpisodesVideo(id) {
+                let custhis = this;
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa ?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Xóa',
+                    showCancelButton: true,
+                    cancelButtonText: "Hủy",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/Admin/EpisodesVideo/DeleteData?id=${id}`, {
+                            method: "DELETE"
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.statusCode) {
+                                    Swal.fire({
+                                        position: 'center',
+                                        icon: 'success',
+                                        title: "Thành công",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then((res) => { custhis.initData() });
+                                }
+                            })
+                    }
+                })
+            },
+            ViewImg(src) {
+                Swal.fire({
+                    imageUrl: `${src}`,
+                    imageWidth: 400,
+                })
+            },
+            ViewVideo(src) {
+                console.log(src)
+                Swal.fire({
+                    html: `<video controls style=" width: 100%;height: auto;">
+                                                                          <source src="${src}" type="video/mp4">
+                                                                </video>`,
+                    imageWidth: 1000,
+                })
+            },
+            ViewTimeLine(videoId) {
+                if (videoId != undefined) {
+                    this.currentVideoId = videoId;
+                }
+                $("#ModalTimeLineContent").load(`/Admin/EpisodesVideo/TimeLine?videoid=${this.currentVideoId}`, function () {
+
+                    $("#ModalTimeLineTitle").html("Time line video");
+                    $("#ModalTimeLine").modal("show");
+                })
+            },
+            AddTimeLine() {
+                $("#ModalAddTimeLineContent").load(`/Admin/EpisodesVideo/AddTimeLine`, function () {
+                    $("#ModalAddTimeLineTitle").html("Thêm mới");
+                    $("#ModalAddTimeLine").modal("show");
+                })
+            },
+            AddTimeLineExcel() {
+                $("#ModalAddTimeLineContentExcel").load(`/Admin/EpisodesVideo/AddTimeLineExcel`, function () {
+                    $("#ModalAddTimeLineTitleExcel").html("Thêm mới");
+                    $("#ModalAddTimeLineExcel").modal("show");
+                })
+            },
+            SaveTimeLine() {
+                let _timeline = new FormData();
+                _timeline.append("Id", $("#Id").val())
+                _timeline.append("CreatedDate", $("#CreatedDate").val())
+                _timeline.append("TimePoint", $("#TimePoint").val())
+                _timeline.append("Vietnamese", $("#Vietnamese").val())
+                _timeline.append("English", $("#English").val())
+                _timeline.append("VideoId", this.currentVideoId)
+                _timeline.append("IsDeleted", false)
+
+                fetch("/Admin/EpisodesVideo/SaveTimeLine", {
+                    method: "POST",
+                    headers: {
+                        processData: false,
+                        contentType: false,
+                    },
+                    body: _timeline
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        $('#ModalAddTimeLine').modal('hide');
+                        console.log(res)
+                        Swal.fire({
+                            title: "Thành công",
+                            icon: 'info',
+                        }).then(res => {
+                            this.ViewTimeLine(this.currentVideoId);
+                        });
+                    })
+            },
+            SaveTimeLineExcel() {
+                let _data = new FormData();
+                $('#preloader').fadeIn();
+                for (let i = 0; i < TimeLineExcel.$data.data.length; i++) {
+                    _data.append(`vm[${i}][Id]`, 0)
+                    _data.append(`vm[${i}][TimePoint]`, TimeLineExcel.$data.data[i].Time)
+                    _data.append(`vm[${i}][Vietnamese]`, TimeLineExcel.$data.data[i].SubVN)
+                    _data.append(`vm[${i}][English]`, TimeLineExcel.$data.data[i].SubEN)
+                    _data.append(`vm[${i}][VideoId]`, this.currentVideoId)
+                }
+
+                fetch("/Admin/EpisodesVideo/SaveTimeLineRange", {
+                    method: "POST",
+                    headers: {
+                        processData: false,
+                        contentType: false,
+                    },
+                    body: _data
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        $('#preloader').fadeOut();
+                        $("#ModalAddTimeLineExcel").modal("hide");
+                    })
+            },
+            DonwloadExcel() {
+                const fileUrl = '/upload/excel/Book1.xlsx';
+                const link = $('<a>', {
+                    href: fileUrl,
+                    download: 'Example.xlsx'
+                }).appendTo('body');
+                link[0].click();
+                link.remove();
+
+            }
+        }
+    })
+
+
+    function Save() {
+        let _data = new FormData()
+        _data.append("Id", $("#Id").val())
+        _data.append("ImgLink", $("#ImgLink").val())
+        _data.append("VideoLink", $("#VideoLink").val())
+        _data.append("ViewCount", $("#ViewCount").val())
+        _data.append("TitleVN", $("#TitleVN").val())
+        _data.append("TitleEN", $("#TitleEN").val())
+        _data.append("VideoId", $("#VideoId").val())
+        _data.append("VideoId", $("#VideoId").val())
+        _data.append("EpisodeNumber", $("#EpisodeNumber").val())
+        _data.append("ImgFile", document.getElementById("ImgFile").files[0])
+        _data.append("VideoFile", document.getElementById("VideoFile").files[0])
+        _data.append("Description", $("#Description").val())
+
+        fetch("/Admin/EpisodesVideo/SaveData", {
+            method: "POST",
+            headers: {
+                processData: false,
+                contentType: false,
+            },
+            body: _data
+        })
+            .then(res => res.json())
+            .then(res => {
+                $('#staticBigModel').modal('hide');
+                console.log(res)
+                Swal.fire({
+                    title: "Thành công",
+                    icon: 'info',
+                }).then(res => {
+                    AppVueEpisodesVideo.initData();
+                });
+            })
+    }
+
+    function DeleteTimeLine(videoid) {
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xóa',
+            showCancelButton: true,
+            cancelButtonText: "Hủy",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/Admin/Video/DeleteTimeLine?id=${videoid}`, {
+                    method: "DELETE"
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.statusCode) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: "Thành công",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((res) => {
+
+                                AppVueEpisodesVideo.ViewTimeLine()
+                            });
+                        }
+                    })
+            }
+        })
+    }
+
+    function EditTimeLine(videoid) {
+        $("#ModalAddTimeLineContent").load(`/Admin/EpisodesVideo/EditTimeLine?id=${videoid}`, function () {
+            $("#ModalAddTimeLineTitle").html("Cập nhật");
+            $("#ModalAddTimeLine").modal("show");
+        })
+    }
+
+</script>

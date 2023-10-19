@@ -1,0 +1,69 @@
+﻿@model Tommava.Models.EpisodesVideoVM.EpisodesVideoVM;
+
+<form id="EpisodesVideo">
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="ImgLink" />
+    <input hidden asp-for="VideoLink" />
+    <input hidden asp-for="ViewCount" />
+
+
+    <div class="form-group">
+        <label asp-for="TitleVN" class="control-label"></label>
+        <input asp-for="TitleVN" class="form-control" />
+        <span asp-validation-for="TitleVN" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TitleEN" class="control-label"></label>
+        <input asp-for="TitleEN" class="form-control" />
+        <span asp-validation-for="TitleEN" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="VideoId" class="form-label"></label>
+        <div class="container">
+            <select asp-for="VideoId" asp-items="@ViewBag.Video" class="form-control">
+                <option value="0" selected disabled>--- Không  ---</option>
+            </select>
+            <span asp-validation-for="VideoId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="EpisodeNumber" class="control-label"></label>
+        <input asp-for="EpisodeNumber" class="form-control" />
+        <span asp-validation-for="EpisodeNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImgFile" class="control-label"></label>
+        <input asp-for="ImgFile" class="form-control" />
+        <span asp-validation-for="ImgFile" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="VideoFile" class="control-label"></label>
+        <input asp-for="VideoFile" class="form-control" />
+        <span asp-validation-for="VideoFile" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control" v-model="ckName"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+</form>
+
+
+<script src="/js/config_ckeditor.js"></script>
+<script>
+    var EpisodesVideo = new Vue({
+        el: "#EpisodesVideo",
+        data: {
+            ckName: ""
+        },
+        mounted() {
+            configureCKEditor('#Description', this, this.ckName || {});
+
+        }
+    })
+</script>
+
+
+
+
